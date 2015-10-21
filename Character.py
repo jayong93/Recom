@@ -13,14 +13,21 @@ class Animation():
 class Character(GameObject):
     def __init__(self):
         super().__init__()
-        self.animationList = {}
-        self.currentAnimation = 0
-        self.frame = 0
+        self.currentAnimation = None
+        self.frame = None
         self.state = None
         return
 
     def ChangeState(self, newState):
         if self.state is not None:
-            self.state.Exit()
-        self.state = newState(self)
-        self.state.Enter()
+            self.state.Exit(self)
+        self.state = self.stateList[newState]
+        self.state.Enter(self)
+
+    def Update(self):
+        if self.state is not None:
+            self.state.Update(self)
+
+    def Draw(self):
+        if self.state is not None:
+            self.state.Draw(self)

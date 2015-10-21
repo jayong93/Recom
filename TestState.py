@@ -12,7 +12,7 @@ def enter():
     global player, image
     open_canvas()
     player = Player.Player()
-    player.ChangeState(Player.PlayerIdleState)
+    player.ChangeState(player.IDLE)
     player.x = 400
     player.y = 300
 
@@ -46,12 +46,12 @@ def handle_events():
 
 
 def update():
-    player.state.Update()
+    player.Update()
     delay(0.01)
 
 
 def draw():
     global player
     clear_canvas()
-    player.state.Draw()
+    player.Draw()
     update_canvas()
