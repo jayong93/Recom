@@ -1,6 +1,6 @@
 __author__ = 'Administrator'
 
 import game_framework
-import TestState
+import TestStage
 
-game_framework.run(TestState)
+game_framework.run(TestStage)

@@ -21,7 +21,18 @@ class Player(Character):
             Player.stateList = {Player.IDLE: PlayerIdleState(),
                                 Player.MOVE: PlayerMoveState(),
                                 Player.MELEE: PlayerMeleeState()}
+
+        self.colBoxX = 36
+        self.colBoxY = 87
+        self.colBoxW = 40
+        self.colBoxH = 60
         return
+
+    def GetCollisionBox(self):
+        anim = self.animationList[self.currentAnimation]
+        cbx = self.x - anim.w / 2 + self.colBoxX
+        cby = self.y - anim.h / 2 + self.colBoxY
+        return Rect(cbx, cby, self.colBoxW, self.colBoxH)
 
 
 class PlayerIdleState(StateBase):
