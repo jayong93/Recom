@@ -1,6 +1,7 @@
 __author__ = 'Administrator'
 
 from pico2d import *
+import Camera
 
 
 class Map:
@@ -26,4 +27,9 @@ class Map:
         return
 
     def Draw(self):
-        self.image.draw(self.w * self.tw / 2, self.h * self.th / 2)
+        x, y = Camera.GetCameraPos(self.w * self.tw / 2, self.h * self.th / 2)
+        self.image.draw(x, y)
+        self.image.draw(x + self.w * self.tw, y)
+
+    def GetSize(self):
+        return self.w * self.tw * 2, self.h * self.th
