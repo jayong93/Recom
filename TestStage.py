@@ -1,5 +1,3 @@
-__author__ = 'Administrator'
-
 import game_framework
 import InputManager
 import Map

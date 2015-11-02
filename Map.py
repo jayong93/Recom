@@ -1,5 +1,3 @@
-__author__ = 'Administrator'
-
 from pico2d import *
 import Camera
 

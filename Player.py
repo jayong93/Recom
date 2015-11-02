@@ -1,5 +1,3 @@
-__author__ = 'Administrator'
-
 from Character import *
 from State import *
 import Camera

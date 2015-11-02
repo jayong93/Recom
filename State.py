@@ -1,5 +1,3 @@
-__author__ = 'Administrator'
-
 import Camera
 
 class StateBase:

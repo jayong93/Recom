@@ -1,5 +1,3 @@
-__author__ = 'Administrator'
-
 from Map import *
 
 x, y = None, None
