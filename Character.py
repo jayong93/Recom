@@ -12,7 +12,7 @@ class Character(GameObject):
     def __init__(self):
         super().__init__()
         self.currentAnimation = None
-        self.frame = None
+        self.frame = 0
         self.state = None
         self.isDelete = False
         self.colBoxW = 0
