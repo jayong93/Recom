@@ -1,5 +1,3 @@
-__author__ = 'Administrator'
-
 keyMap = {}
 lButton = False
 rButton = False

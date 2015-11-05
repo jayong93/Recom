@@ -1,7 +1,6 @@
-__author__ = 'Administrator'
-
 from Character import *
 from State import *
+import Camera
 import InputManager
 
 
@@ -43,8 +42,9 @@ class PlayerIdleState(StateBase):
     def Update(self, owner):
         super(PlayerIdleState, self).Update(owner)
 
-        if InputManager.GetKeyState(SDLK_a) or InputManager.GetKeyState(SDLK_d):
-            owner.ChangeState(Player.MOVE)
+        if not (InputManager.GetKeyState(SDLK_LEFT) and InputManager.GetKeyState(SDLK_RIGHT)):
+            if InputManager.GetKeyState(SDLK_LEFT) or InputManager.GetKeyState(SDLK_RIGHT):
+                owner.ChangeState(Player.MOVE)
         elif InputManager.GetKeyState(SDLK_SPACE):
             owner.ChangeState(Player.MELEE)
 
@@ -57,13 +57,17 @@ class PlayerMoveState(StateBase):
     def Update(self, owner):
         super(PlayerMoveState, self).Update(owner)
 
-        if InputManager.GetKeyState(SDLK_d):
+        if InputManager.GetKeyState(SDLK_RIGHT):
             owner.x += 2
-        if InputManager.GetKeyState(SDLK_a):
+            Camera.SetCameraPos(owner.x, Camera.y)
+        if InputManager.GetKeyState(SDLK_LEFT):
             owner.x -= 2
+            Camera.SetCameraPos(owner.x, Camera.y)
         if InputManager.GetKeyState(SDLK_SPACE):
             owner.ChangeState(Player.MELEE)
-        elif not InputManager.GetKeyState(SDLK_d) and not InputManager.GetKeyState(SDLK_a):
+        elif InputManager.GetKeyState(SDLK_RIGHT) and InputManager.GetKeyState(SDLK_LEFT):
+            owner.ChangeState(Player.IDLE)
+        elif not InputManager.GetKeyState(SDLK_RIGHT) and not InputManager.GetKeyState(SDLK_LEFT):
             owner.ChangeState(Player.IDLE)
 
 
@@ -74,7 +78,7 @@ class PlayerMeleeState(StateBase):
 
     def Update(self, owner):
         anim = owner.animationList[owner.currentAnimation]
-        owner.frame = owner.frame + 1
+        owner.frame += 1
 
         if owner.frame >= anim.frame * 6:
             owner.ChangeState(Player.IDLE)

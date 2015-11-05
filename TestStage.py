@@ -1,11 +1,10 @@
-__author__ = 'Administrator'
-
 import game_framework
 import InputManager
 import Map
 import Player
-import Duck1
+import Monster
 import random
+import Camera
 from pico2d import *
 
 objList = None
@@ -14,14 +13,18 @@ PLAYER, MONSTER = 0, 1
 
 def enter():
     open_canvas()
+    Camera.w, Camera.h = 800, 600
 
     global objList, map
     map = Map.Map('test_stage')
+    Camera.currentMap = map
+
     objList = {PLAYER: [], MONSTER: []}
     player = Player.Player()
     player.ChangeState(player.IDLE)
     player.x = 400
     player.y = 150
+    Camera.SetCameraPos(player.x, 300)
 
     objList[PLAYER].append(player)
 
@@ -43,7 +46,7 @@ def resume():
 
 
 def handle_events():
-    global objList
+    global objList, map
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -53,9 +56,15 @@ def handle_events():
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
             elif event.key == SDLK_1:
-                duck = Duck1.Duck1()
+                duck = Monster.Duck1()
                 duck.ChangeState(duck.MOVE)
-                duck.x, duck.y = random.randint(0,800), 150
+                duck.x, duck.y = random.randint(0,map.GetSize()[0]), 150
+                duck.SetTarget(objList[PLAYER][0])
+                objList[MONSTER].append(duck)
+            elif event.key is SDLK_2:
+                duck = Monster.Duck2()
+                duck.ChangeState(duck.MOVE)
+                duck.x, duck.y = random.randint(0,map.GetSize()[0]), 150
                 duck.SetTarget(objList[PLAYER][0])
                 objList[MONSTER].append(duck)
         elif event.type == SDL_KEYUP:
@@ -65,12 +74,9 @@ def handle_events():
 def update():
     global objList
 
-    print(len(objList[MONSTER]))
-
     # 충돌 체크
     player = objList[PLAYER][0]
     for m in objList[MONSTER]:
-        assert isinstance(m, Duck1.Duck1)
         if m.GetCollisionBox().CollisionCheck(player.GetCollisionBox()):
             m.Collision(player)
 
