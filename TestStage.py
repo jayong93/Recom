@@ -19,9 +19,11 @@ def enter():
     map = Map.Map('test_stage')
     Camera.currentMap = map
 
+    with open('player.json', 'r') as f:
+        Player.playerData = json.load(f)
+
     objList = {PLAYER: [], MONSTER: []}
     player = Player.Player()
-    player.ChangeState(player.IDLE)
     player.x = 400
     player.y = 150
     Camera.SetCameraPos(player.x, 300)
