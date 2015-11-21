@@ -12,21 +12,20 @@ map = None
 PLAYER, MONSTER = 0, 1
 
 def enter():
-    open_canvas()
     Camera.w, Camera.h = 800, 600
-
-    global objList, map
-    map = Map.Map('test_stage')
-    Camera.currentMap = map
 
     with open('player.json', 'r') as f:
         Player.playerData = json.load(f)
 
+    global objList, map
+    map = Map.Map('stage1')
+    Camera.currentMap = map
+
     objList = {PLAYER: [], MONSTER: []}
     player = Player.Player()
     player.x = 400
-    player.y = 150
-    Camera.SetCameraPos(player.x, 300)
+    player.y = 400
+    Camera.SetCameraPos(player.x, 400)
 
     objList[PLAYER].append(player)
 
@@ -36,7 +35,6 @@ def exit():
     for o in objList:
         del o
     del objList, map
-    close_canvas()
 
 
 def pause():
@@ -47,55 +45,47 @@ def resume():
     pass
 
 
-def handle_events():
+def handle_events(frame_time):
     global objList, map
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN:
-            InputManager.KeyDown(event.key)
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
-            elif event.key == SDLK_1:
-                duck = Monster.Duck1()
-                duck.ChangeState(duck.MOVE)
-                duck.x, duck.y = random.randint(0,map.GetSize()[0]), 150
-                duck.SetTarget(objList[PLAYER][0])
-                objList[MONSTER].append(duck)
-            elif event.key is SDLK_2:
-                duck = Monster.Duck2()
-                duck.ChangeState(duck.MOVE)
-                duck.x, duck.y = random.randint(0,map.GetSize()[0]), 150
-                duck.SetTarget(objList[PLAYER][0])
-                objList[MONSTER].append(duck)
+            else:
+                InputManager.KeyDown(event.key)
         elif event.type == SDL_KEYUP:
             InputManager.KeyUp(event.key)
 
 
-def update():
-    global objList
+def update(frame_time):
+    global objList, map
 
-    # 충돌 체크
     player = objList[PLAYER][0]
-    for m in objList[MONSTER]:
-        if m.GetCollisionBox().CollisionCheck(player.GetCollisionBox()):
-            m.Collision(player)
+    player.vy -= player.PPM * 0.5 * 0.01
 
     for k in objList.keys():
         for o in objList[k]:
-            o.Update()
+            o.Update(frame_time)
             if o.isDelete is True:
                 objList[k].remove(o)
 
-    delay(0.01)
+    for cb in map.colBox:
+        if cb.CollisionCheck(player.GetCollisionBox()):
+            player.x -= player.vx*player.PPM*frame_time
+            player.y -= player.vy*player.PPM*frame_time
+            if player.GetCollisionBox().bottom > cb.top:
+                player.vy = 0
+            break
 
 
-def draw():
+def draw(frame_time):
     global objList, map
     clear_canvas()
     map.Draw()
     for k in objList.keys():
         for o in objList[k]:
-            o.Draw()
+            o.Draw(frame_time)
     update_canvas()

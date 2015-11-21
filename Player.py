@@ -1,12 +1,13 @@
 from Character import *
-from State import *
+from Collision import *
 import Camera
 import InputManager
 
 playerData = None
 
 
-class Player(Character):
+class Player:
+    PPM = 1 / 0.015
     animationList = None
     stateList = None
 
@@ -20,72 +21,34 @@ class Player(Character):
 
         if Player.stateList is None:
             Player.stateList = {
-                'IDLE': PlayerIdleState(),
-                'MOVE': PlayerMoveState(),
-                'MELEE': PlayerMeleeState()
+                'IDLE': self.IdleUpdate(),
+                'MOVE': self.MoveUpdate(),
+                'MELEE': self.MeleeUpdate()
             }
 
-        self.colBoxX = playerData['cx']
-        self.colBoxY = playerData['cy']
-        self.colBoxW = playerData['cw']
-        self.colBoxH = playerData['ch']
+        self.colBox = CollisionBox(playerData['cx'], playerData['cy'],
+                                   playerData['cx'] + playerData['cw'], playerData['cy'] + playerData['ch'])
 
         self.currentAnimation = playerData['currentState']
         self.state = Player.stateList[playerData['currentState']]
+        self.isJump = False
         return
 
     def GetCollisionBox(self):
         anim = self.animationList[self.currentAnimation]
-        cbx = self.x - anim.w / 2 + self.colBoxX
-        cby = self.y - anim.h / 2 + self.colBoxY
-        return Rect(cbx, cby, self.colBoxW, self.colBoxH)
+        return self.colBox.Move(self.x - anim.w/2,self.y - anim.h/2)
 
+    def IdleUpdate(self):
+        pass
 
-class PlayerIdleState(StateBase):
-    def Enter(self, owner):
-        owner.frame = 0
-        owner.currentAnimation = 'IDLE'
+    def MoveUpdate(self):
+        pass
 
-    def Update(self, owner):
-        super(PlayerIdleState, self).Update(owner)
+    def MeleeUpdate(self):
+        pass
 
-        if not (InputManager.GetKeyState(SDLK_LEFT) and InputManager.GetKeyState(SDLK_RIGHT)):
-            if InputManager.GetKeyState(SDLK_LEFT) or InputManager.GetKeyState(SDLK_RIGHT):
-                owner.ChangeState('MOVE')
-        elif InputManager.GetKeyState(SDLK_SPACE):
-            owner.ChangeState('MELEE')
+    def Draw(self, frame_time):
+        pass
 
-
-class PlayerMoveState(StateBase):
-    def Enter(self, owner):
-        owner.frame = 0
-        owner.currentAnimation = 'MOVE'
-
-    def Update(self, owner):
-        super(PlayerMoveState, self).Update(owner)
-
-        if InputManager.GetKeyState(SDLK_RIGHT):
-            owner.x += 2
-            Camera.SetCameraPos(owner.x, Camera.y)
-        if InputManager.GetKeyState(SDLK_LEFT):
-            owner.x -= 2
-            Camera.SetCameraPos(owner.x, Camera.y)
-        if InputManager.GetKeyState(SDLK_SPACE):
-            owner.ChangeState('MELEE')
-        elif InputManager.GetKeyState(SDLK_RIGHT) and InputManager.GetKeyState(SDLK_LEFT):
-            owner.ChangeState('IDLE')
-        elif not InputManager.GetKeyState(SDLK_RIGHT) and not InputManager.GetKeyState(SDLK_LEFT):
-            owner.ChangeState('MOVE')
-
-
-class PlayerMeleeState(StateBase):
-    def Enter(self, owner):
-        owner.frame = 0
-        owner.currentAnimation = 'MELEE'
-
-    def Update(self, owner):
-        anim = owner.animationList[owner.currentAnimation]
-        owner.frame += 1
-
-        if owner.frame >= anim.frame * 6:
-            owner.ChangeState('IDLE')
+    def Update(self, frame_time):
+        pass

@@ -1,0 +1,36 @@
+{
+  "width": 7680,
+  "height": 768,
+  "colBox": [
+    {
+      "left": 0,
+      "right": 7680,
+      "bottom": 0,
+      "top": 256
+    },
+    {
+      "left": 1727,
+      "right": 2344,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 2623,
+      "right": 3559,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 2752,
+      "right": 3559,
+      "bottom": 256,
+      "top": 364
+    },
+    {
+      "left": 2944,
+      "right": 3559,
+      "bottom": 320,
+      "top": 428
+    }
+  ]
+}

@@ -1,6 +1,9 @@
 __author__ = 'Administrator'
 
 import game_framework
-import TestStage
+import Stage1 as StartStage
+from pico2d import *
 
-game_framework.run(TestStage)
+open_canvas(sync=True)
+game_framework.run(StartStage)
+close_canvas()

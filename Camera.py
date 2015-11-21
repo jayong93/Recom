@@ -1,5 +1,3 @@
-from Map import *
-
 x, y = None, None
 w, h = None, None
 currentMap = None
@@ -7,14 +5,16 @@ currentMap = None
 
 def GetCameraPos(wx, wy):
     global x, y, w, h
-    return wx - x + w / 2, wy - y + h / 2
+    return int(wx - x + w / 2), int(wy - y + h / 2)
 
 
 def SetCameraPos(wx, wy):
     global x, y, w, h
-    mw, mh = currentMap.GetSize()
+    mw, mh = currentMap.w, currentMap.h
+    # 화면 왼쪽으로 넘어가려 할 때
     if wx < w/2:
         x = w/2
+    # 화면 오른쪽으로 넘어가려 할 때
     elif wx > mw - w/2:
         x = mw - w/2
     else:
