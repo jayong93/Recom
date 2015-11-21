@@ -1,0 +1,15 @@
+{
+  "cx": 6,
+  "cy": 12,
+  "cw": 38,
+  "ch": 72,
+  "animation": 
+    [
+      "resource/teleporter.png",
+      "true",
+      8,
+      50,
+      96,
+      1
+    ]
+}

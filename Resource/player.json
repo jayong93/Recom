@@ -3,11 +3,12 @@
   "cy": 7,
   "cw": 40,
   "ch": 60,
-  "mps" : 4,
+  "run_speed" : 4,
   "mpp" : 0.015,
   "animation": {
     "IDLE": [
       "resource/spr_jimmy_idle.png",
+      "true",
       12,
       114,
       94,
@@ -15,6 +16,7 @@
     ],
     "MOVE": [
       "resource/spr_jimmy_sprint.png",
+      "true",
       6,
       114,
       94,
@@ -22,10 +24,11 @@
     ],
     "MELEE": [
       "resource/spr_jimmy_melee.png",
+      "false",
       6,
       114,
       94,
-      0.3
+      0.4
     ]
   },
   "currentState": "MOVE"

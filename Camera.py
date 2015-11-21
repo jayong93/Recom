@@ -1,5 +1,5 @@
 x, y = None, None
-w, h = None, None
+w, h = 800, 600
 currentMap = None
 
 

@@ -1,6 +1,18 @@
 {
   "width": 7680,
   "height": 768,
+  "object": [
+    {
+      "type": "player",
+      "x": 400,
+      "y": 320
+    },
+    {
+      "type": "teleporter",
+      "x": 7600,
+      "y": 290
+    }
+  ],
   "colBox": [
     {
       "left": -10,
@@ -21,28 +33,65 @@
       "top": 256
     },
     {
-      "left": 1727,
-      "right": 2344,
-      "bottom": 192,
-      "top": 300
-    },
-    {
-      "left": 2623,
-      "right": 3559,
+      "left": 1470,
+      "right": 2343,
       "bottom": 192,
       "top": 300
     },
     {
       "left": 2752,
-      "right": 3559,
+      "right": 3688,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 2880,
+      "right": 3688,
       "bottom": 256,
       "top": 364
     },
     {
-      "left": 2944,
-      "right": 3559,
+      "left": 3072,
+      "right": 3688,
       "bottom": 320,
       "top": 428
+    },
+    {
+      "left": 3903,
+      "right": 4072,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 4159,
+      "right": 4327,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 4416,
+      "right": 4583,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 4670,
+      "right": 4840,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 4928,
+      "right": 6055,
+      "bottom": 192,
+      "top": 300
+    }
+    ,
+    {
+      "left": 5120,
+      "right": 5887,
+      "bottom": 256,
+      "top": 364
     }
   ]
 }

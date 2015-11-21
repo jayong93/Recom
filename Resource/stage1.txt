@@ -1,4 +1,0 @@
-width=120
-height=12
-tilewidth=64
-tileheight=64

@@ -6,14 +6,9 @@ import Camera
 class Map:
     def __init__(self, fileName):
         self.image = load_image('resource/' + fileName + '.png')
-        with open('resource/' + fileName + '.json', 'r') as f:
-            data = json.load(f)
-            self.w = data['width']
-            self.h = data['height']
-            cbList = data['colBox']
-            self.colBox = []
-            for cb in cbList:
-                self.colBox.append(CollisionBox(cb['left'],cb['right'],cb['bottom'],cb['top']))
+        self.w = 0
+        self.h = 0
+        self.colBox = []
 
     def Draw(self):
         x, y = Camera.GetCameraPos(self.w / 2, self.h / 2)

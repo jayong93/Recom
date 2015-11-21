@@ -6,7 +6,8 @@ import Player
 from pico2d import *
 
 open_canvas(sync=True)
-with open('player.json', 'r') as f:
+with open('resource/player.json', 'r') as f:
     Player.playerData = json.load(f)
+Player.player = Player.Player()
 game_framework.run(StartStage)
 close_canvas()
