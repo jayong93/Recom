@@ -11,20 +11,17 @@ objList = None
 map = None
 PLAYER, MONSTER = 0, 1
 
+
 def enter():
-    Camera.w, Camera.h = 800, 600
-
-    with open('player.json', 'r') as f:
-        Player.playerData = json.load(f)
-
     global objList, map
     map = Map.Map('stage1')
     Camera.currentMap = map
+    Camera.w, Camera.h = 800, 600
 
     objList = {PLAYER: [], MONSTER: []}
     player = Player.Player()
     player.x = 400
-    player.y = 400
+    player.y = 310
     Camera.SetCameraPos(player.x, 400)
 
     objList[PLAYER].append(player)
@@ -47,8 +44,10 @@ def resume():
 
 def handle_events(frame_time):
     global objList, map
+    player = objList[PLAYER][0]
     events = get_events()
     for event in events:
+        player.HandleEvent(event, frame_time)
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN:
@@ -64,7 +63,6 @@ def update(frame_time):
     global objList, map
 
     player = objList[PLAYER][0]
-    player.vy -= player.PPM * 0.5 * 0.01
 
     for k in objList.keys():
         for o in objList[k]:
@@ -72,13 +70,32 @@ def update(frame_time):
             if o.isDelete is True:
                 objList[k].remove(o)
 
+    Camera.SetCameraPos(player.x, player.y)
+
     for cb in map.colBox:
         if cb.CollisionCheck(player.GetCollisionBox()):
-            player.x -= player.vx*player.PPM*frame_time
+            cy = player.y
             player.y -= player.vy*player.PPM*frame_time
-            if player.GetCollisionBox().bottom > cb.top:
+            oldy = player.y
+            pcb = player.GetCollisionBox()
+            player.y = cy
+
+            if pcb.bottom > cb.top:
                 player.vy = 0
-            break
+                player.y = oldy
+            elif pcb.right >= cb.left or pcb.left <= cb.right:
+                player.x -= player.vx*player.PPM*frame_time
+                player.vx = 0
+
+    fall_check = True
+    pcb = player.GetCollisionBox()
+    for cb in map.colBox:
+        if (cb.left < pcb.left < cb.right) or (cb.left < pcb.right < cb.right):
+            if pcb.bottom - 2 < cb.top:
+                fall_check = False
+                break
+    if fall_check:
+        player.vy -= 0.3 * player.PPM * frame_time
 
 
 def draw(frame_time):

@@ -3,6 +3,18 @@
   "height": 768,
   "colBox": [
     {
+      "left": -10,
+      "right": 0,
+      "bottom": 0,
+      "top": 768
+    },
+    {
+      "left": 7680,
+      "right": 7690,
+      "bottom": 0,
+      "top": 768
+    },
+    {
       "left": 0,
       "right": 7680,
       "bottom": 0,

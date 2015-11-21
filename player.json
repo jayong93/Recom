@@ -1,27 +1,32 @@
 {
   "cx": 36,
-  "cy": 87,
+  "cy": 7,
   "cw": 40,
   "ch": 60,
+  "mps" : 4,
+  "mpp" : 0.015,
   "animation": {
     "IDLE": [
       "resource/spr_jimmy_idle.png",
       12,
       114,
-      94
+      94,
+      1
     ],
     "MOVE": [
       "resource/spr_jimmy_sprint.png",
       6,
       114,
-      94
+      94,
+      0.5
     ],
     "MELEE": [
       "resource/spr_jimmy_melee.png",
       6,
       114,
-      94
+      94,
+      0.3
     ]
   },
-  "currentState": "IDLE"
+  "currentState": "MOVE"
 }
