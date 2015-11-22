@@ -2,6 +2,7 @@ import game_framework
 import Map
 import InputManager
 import Player
+import Gun
 from Object import *
 from pico2d import *
 
@@ -16,6 +17,9 @@ def enter():
     global objList, map, nextStage, player
 
     player = Player.player
+    player.gun.load_data(Gun.pistolData)
+    player.gun.remain_bullet_num = player.gun.total_bullet_num
+
     objList = {PLAYER: [player], MONSTER: [], OBJECT: [], TELEPORT: []}
 
     with open('resource/stage1.json', 'r') as f:
@@ -102,6 +106,10 @@ def update(frame_time):
                     elif pcb.left <= cb.right:
                         left = obj.GetCollisionBox().left
                         obj.x += cb.right - left
+        # 일반 오브젝트(총알)을 맵과 충돌체크
+        for obj in objList[OBJECT]:
+            if cb.CollisionCheck(obj.GetCollisionBox()):
+                obj.Collision('MAP')
 
     # 카메라가 플레이어를 따라다니게
     Camera.SetCameraPos(player.x + 300, player.y)

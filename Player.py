@@ -1,5 +1,8 @@
 from Object import *
 from Collision import *
+import Gun
+import math
+import game_framework
 
 playerData = None
 player = None
@@ -39,7 +42,9 @@ class Player(Character):
 
         self.state = playerData['currentState']
         self.isJump = False
-        self.gun = None
+        self.isShooting = False
+        self.gun = Gun.Gun()
+        self.targetX, self.targetY = self.x + 1, self.y
         return
 
     def GetCollisionBox(self):
@@ -63,6 +68,10 @@ class Player(Character):
         anim = self.animationList[self.state]
         x, y = Camera.GetCameraPos(self.x, self.y)
         anim.image.clip_draw(int(self.frame) % anim.frame * anim.w, 0, anim.w, anim.h, x, y)
+        gunX, gunY = x + 10, y - 25
+        tx, ty = max(self.targetX, gunX+1), self.targetY
+        rad = math.atan2(ty - gunY, tx - gunX)
+        self.gun.image.rotate_draw(rad, gunX, gunY)
         x, y = x - anim.w / 2, y - anim.h / 2
         draw_rectangle(self.colBox.left + x, self.colBox.bottom + y, self.colBox.right + x, self.colBox.top + y)
 
@@ -77,12 +86,40 @@ class Player(Character):
         self.x += self.vx * self.PPM * frame_time
         self.y += self.vy * self.PPM * frame_time
 
+        # 총 정보 갱신
+        self.gun.Update(frame_time)
+
+        # 발포
+        if self.isShooting and self.gun.Shoot():
+            gx, gy = self.x + 10, self.y - 25
+            tx, ty = Camera.GetWorldPos(self.targetX, self.targetY)
+            tx = max(tx, gx+1)
+            rad = math.atan2(ty-gy, tx-gx)
+            vcos, vsin = math.cos(rad), math.sin(rad)
+
+            bullet = Gun.Bullet(vcos + gx, vsin + gy,
+                                self.gun.bullet_image, self.gun.damage,
+                                vcos*self.gun.bullet_speed, vsin*self.gun.bullet_speed, rad)
+
+            stage = game_framework.get_top_state()
+            stage.objList[stage.OBJECT].append(bullet)
+
         self.stateList[self.state](frame_time)
 
     def HandleEvent(self, event, frame_time):
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_SPACE and self.vy == 0:
                 self.vy = 7
-            elif event.key == SDLK_a:
+            elif event.key == SDLK_a and self.state != 'MELEE':
                 self.state = 'MELEE'
                 self.frame = 0
+
+        elif event.type == SDL_MOUSEMOTION:
+            self.targetX, self.targetY = event.x, Camera.h - event.y - 1
+
+        elif event.type == SDL_MOUSEBUTTONDOWN:
+            if event.button == SDL_BUTTON_LEFT:
+                self.isShooting = True
+        elif event.type == SDL_MOUSEBUTTONUP:
+            if event.button == SDL_BUTTON_LEFT:
+                self.isShooting = False

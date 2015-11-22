@@ -71,9 +71,6 @@ class Teleporter(AnimationObject):
 
     def __init__(self, x=0, y=0):
         super().__init__()
-        if self.data is None:
-            with open('resource/teleporter.json', 'r') as f:
-                self.data = json.load(f)
 
         anim = self.data['animation']
         self.anim = Animation(anim[0], anim[1], anim[2], anim[3], anim[4], anim[5])

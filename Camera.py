@@ -34,4 +34,5 @@ def SetCameraSize(cw, ch):
 
 
 def GetWorldPos(cx, cy):
-    pass
+    global x, y, w, h
+    return cx + x - w/2, cy + y - h/2
