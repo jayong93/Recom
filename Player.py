@@ -45,7 +45,6 @@ class Player(Character):
         self.isShooting = False
         self.gun = Gun.Gun()
         self.targetX, self.targetY = self.x + 1, self.y
-        return
 
     def GetCollisionBox(self):
         anim = self.animationList[self.state]
@@ -97,7 +96,7 @@ class Player(Character):
             rad = math.atan2(ty-gy, tx-gx)
             vcos, vsin = math.cos(rad), math.sin(rad)
 
-            bullet = Gun.Bullet(vcos + gx, vsin + gy,
+            bullet = Gun.Bullet(vcos + gx, vsin + gy + 3,
                                 self.gun.bullet_image, self.gun.damage,
                                 vcos*self.gun.bullet_speed, vsin*self.gun.bullet_speed, rad)
 

@@ -3,22 +3,23 @@ import Map
 import InputManager
 import Player
 import Gun
+import Cursor
 from Object import *
 from pico2d import *
 
 objList = None
 map = None
 nextStage = None
+bgm = None
 player = None
 PLAYER, MONSTER, OBJECT, TELEPORT = 0, 1, 2, 3
 
 
 def enter():
-    global objList, map, nextStage, player
+    global objList, map, nextStage, player, bgm
 
     player = Player.player
-    player.gun.load_data(Gun.pistolData)
-    player.gun.remain_bullet_num = player.gun.total_bullet_num
+    player.gun.load_data(Gun.sniperRifleData)
 
     objList = {PLAYER: [player], MONSTER: [], OBJECT: [], TELEPORT: []}
 
@@ -26,6 +27,9 @@ def enter():
         mapData = json.load(f)
     map = Map.Map('stage1')
     map.w, map.h = mapData['width'], mapData['height']
+    bgm = load_music(mapData['bgm'])
+    bgm.set_volume(120)
+    bgm.repeat_play()
     cbList = mapData['colBox']
     for cb in cbList:
         map.colBox.append(CollisionBox(cb['left'], cb['right'], cb['bottom'], cb['top']))
@@ -66,13 +70,17 @@ def handle_events(frame_time):
         player.HandleEvent(event, frame_time)
         if event.type == SDL_QUIT:
             game_framework.quit()
+        elif event.type == SDL_MOUSEMOTION:
+            Cursor.x, Cursor.y = event.x, Camera.h - event.y - 1
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
-            else:
-                InputManager.KeyDown(event.key)
-        elif event.type == SDL_KEYUP:
-            InputManager.KeyUp(event.key)
+            elif event.key == SDLK_1:
+                player.gun.load_data(Gun.pistolData)
+            elif event.key == SDLK_2:
+                player.gun.load_data(Gun.machineGunData)
+            elif event.key == SDLK_3:
+                player.gun.load_data(Gun.sniperRifleData)
 
 
 def update(frame_time):
@@ -143,6 +151,12 @@ def update(frame_time):
             if nextStage is None:
                 game_framework.quit()
 
+    # 죽은 오브젝트 삭제
+    for t in objList:
+        for o in objList[t]:
+            if o.isDelete:
+                objList[t].remove(o)
+
 
 def draw(frame_time):
     global objList, map
@@ -151,4 +165,5 @@ def draw(frame_time):
     for k in objList.keys():
         for o in objList[k]:
             o.Draw(frame_time)
+    Cursor.draw(frame_time)
     update_canvas()

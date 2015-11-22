@@ -1,6 +1,7 @@
 {
   "width": 7680,
   "height": 768,
+  "bgm": "resource/bgm_stage1.mp3",
   "object": [
     {
       "type": "player",
@@ -31,6 +32,12 @@
       "right": 7680,
       "bottom": 0,
       "top": 256
+    },
+    {
+      "left": 0,
+      "right": 7680,
+      "bottom": 768,
+      "top": 770
     },
     {
       "left": 1470,

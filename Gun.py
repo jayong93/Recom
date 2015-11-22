@@ -1,10 +1,12 @@
 from Object import *
 from pico2d import *
+import Cursor
 import Camera
 
 pistolData = None
 machineGunData = None
 sniperRifleData = None
+reloadSound = None
 
 
 class Gun:
@@ -47,11 +49,19 @@ class Gun:
         if self.shot_speed > self.last_shoot_duration:
             self.last_shoot_duration += frame_time
         if self.is_reloading:
+            if self.reload_duration == 0:
+                global reloadSound
+                Mix_PlayChannelTimed(-1, reloadSound.wav, -1, int(self.reload_speed*1000))
+                Cursor.speed = self.reload_speed
+                Cursor.is_reload = True
+                Cursor.total_frame = 0
+            Cursor.update(frame_time)
             self.reload_duration += frame_time
             if self.reload_speed <= self.reload_duration:
                 self.remain_bullet_num = self.total_bullet_num
                 self.reload_duration = 0
                 self.is_reloading = False
+                Cursor.is_reload = False
 
     def Shoot(self):
         if self.shot_speed <= self.last_shoot_duration and not self.is_reloading:
@@ -84,7 +94,8 @@ class Bullet(GameObject):
         self.y += self.vy * self.PPM * frame_time
 
     def Collision(self, other):
-        pass
+        if other == 'MAP':
+            self.isDelete = True
 
     def GetCollisionBox(self):
         w, h = self.image.w, self.image.h
