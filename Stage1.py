@@ -1,6 +1,5 @@
 import game_framework
 import Map
-import InputManager
 import Player
 import Gun
 import Cursor
