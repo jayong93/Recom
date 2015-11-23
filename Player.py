@@ -25,14 +25,15 @@ class Player(Character):
         self.shield_charge_time = playerData['shield_charge_time']
         self.lastHitDuration = self.shield_charge_time
         self.isShieldOn = False
+        self.hit_object = {}
 
         if type(playerData['hit_sound']) == str:
             playerData['hit_sound'] = load_wav(playerData['hit_sound'])
-            playerData['hit_sound'].set_volume(64)
+            playerData['hit_sound'].set_volume(100)
 
         if type(playerData['shield_hit_sound']) == str:
             playerData['shield_hit_sound'] = load_wav(playerData['shield_hit_sound'])
-            playerData['shield_hit_sound'].set_volume(64)
+            playerData['shield_hit_sound'].set_volume(80)
 
         if self.PPM is None:
             self.PPM = 1 / playerData['mpp']
@@ -59,12 +60,16 @@ class Player(Character):
         self.state = playerData['currentState']
         self.isShooting = False
         self.gun = Gun.Gun('PLAYER')
+        self.gun.reload_mul = 0.5
         self.targetX, self.targetY = self.x + 1, self.y
 
     def GetCollisionBox(self):
         anim = self.animationList[self.state]
         x, y = self.x - anim.w / 2, self.y - anim.h / 2
-        return self.colBox.Move(x, y)
+        cb = self.colBox.Move(x, y)
+        if self.state == 'MELEE':
+            cb.right += 20
+        return cb
 
     def IdleUpdate(self, frame_time):
         self.vx = 0
@@ -77,6 +82,7 @@ class Player(Character):
         if self.frame > self.animationList['MELEE'].frame:
             self.state = 'MOVE'
             self.frame = 0
+            self.hit_object.clear()
 
     def Draw(self, frame_time):
         anim = self.animationList[self.state]
@@ -102,9 +108,6 @@ class Player(Character):
             self.frame += anim.frame * (1 / anim.time) * frame_time
         elif anim.repeat:
             self.frame -= anim.frame
-
-        self.x += self.vx * self.PPM * frame_time
-        self.y += self.vy * self.PPM * frame_time
 
         # 총 정보 갱신
         self.gun.Update(frame_time)
@@ -134,6 +137,9 @@ class Player(Character):
 
         self.stateList[self.state](frame_time)
 
+        self.x += self.vx * self.PPM * frame_time
+        self.y += self.vy * self.PPM * frame_time
+
     def Hit(self, damage):
         self.lastHitDuration = 0
         if self.isShieldOn and self.shield > 0:
@@ -157,11 +163,13 @@ class Player(Character):
             elif event.key == SDLK_a and self.state != 'MELEE':
                 self.state = 'MELEE'
                 self.frame = 0
-            elif event.key == SDLK_s:
+            elif event.key == SDLK_LSHIFT and self.shield >= 1:
                 self.isShieldOn = True
+            elif event.key == SDLK_r:
+                self.gun.Reload()
 
         elif event.type == SDL_KEYUP:
-            if event.key == SDLK_s:
+            if event.key == SDLK_LSHIFT:
                 self.isShieldOn = False
 
         elif event.type == SDL_MOUSEMOTION:
@@ -176,6 +184,6 @@ class Player(Character):
 
     def Collision(self, other):
         if self.state == 'MELEE' and isinstance(other, Monster.Monster):
-            other.hp -= 50
-            if other.hp <= 0:
-                other.isDelete = True
+            if not (other in self.hit_object):
+                other.Hit(50)
+                self.hit_object[other] = True

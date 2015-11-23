@@ -55,6 +55,7 @@ class Monster(Character):
             self.state = 'IDLE'
             self.frame = 0
             self.direction = self.LEFT
+            return
 
         if dist >= self.detect_range/2:
             if self.direction == self.LEFT:
@@ -63,6 +64,21 @@ class Monster(Character):
                 self.vx = self.run_speed
         else:
             self.vx = 0
+
+        if self.vy == 0:
+            cbList = game_framework.get_top_state().map.colBox
+            rayBox = self.GetCollisionBox()
+            rayBox.top, rayBox.bottom = self.y + 1, self.y - 1
+            if self.direction == self.LEFT:
+                rayBox.right = rayBox.left
+                rayBox.left -= self.run_speed
+            else:
+                rayBox.left = rayBox.right
+                rayBox.right += self.run_speed
+            for cb in cbList:
+                if cb.CollisionCheck(rayBox):
+                    self.vy = 7
+                    break
 
     def Draw(self, frame_time):
         anim = self.animationList[self.state]
@@ -102,9 +118,6 @@ class Monster(Character):
         elif anim.repeat:
             self.frame -= anim.frame
 
-        self.x += self.vx * self.PPM * frame_time
-        self.y += self.vy * self.PPM * frame_time
-
         # 총 정보 갱신
         self.gun.Update(frame_time)
 
@@ -131,6 +144,9 @@ class Monster(Character):
             stage.objList[stage.OBJECT].append(bullet)
 
         self.stateList[self.state](frame_time)
+
+        self.x += self.vx * self.PPM * frame_time
+        self.y += self.vy * self.PPM * frame_time
 
     def Hit(self, damage):
         self.hp -= damage

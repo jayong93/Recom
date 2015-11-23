@@ -19,8 +19,10 @@ class Gun:
         self.shoot_sound = None
         self.damage = 0
         self.shot_speed = 0
+        self.shot_mul = 1
         self.piercing = False
         self.reload_speed = 0
+        self.reload_mul = 1
         self.bullet_speed = 0
         self.total_bullet_num = 0
         self.remain_bullet_num = 0
@@ -58,18 +60,18 @@ class Gun:
         Cursor.is_reload = False
         
     def Update(self, frame_time):
-        if self.shot_speed > self.last_shoot_duration:
+        if self.shot_speed * self.shot_mul > self.last_shoot_duration:
             self.last_shoot_duration += frame_time
         if self.is_reloading:
             if self.reload_duration == 0 and self.owner_type == 'PLAYER':
                 global reloadSound
-                Mix_PlayChannelTimed(-1, reloadSound.wav, -1, int(self.reload_speed*1000))
-                Cursor.speed = self.reload_speed
+                Mix_PlayChannelTimed(-1, reloadSound.wav, -1, int(self.reload_speed * self.reload_mul *1000))
+                Cursor.speed = self.reload_speed * self.reload_mul
                 Cursor.is_reload = True
                 Cursor.total_frame = 0
             Cursor.update(frame_time)
             self.reload_duration += frame_time
-            if self.reload_speed <= self.reload_duration:
+            if self.reload_speed * self.reload_mul <= self.reload_duration:
                 self.remain_bullet_num = self.total_bullet_num
                 self.reload_duration = 0
                 self.is_reloading = False
@@ -77,7 +79,7 @@ class Gun:
                     Cursor.is_reload = False
 
     def Shoot(self):
-        if self.shot_speed <= self.last_shoot_duration and not self.is_reloading:
+        if self.shot_speed * self.shot_mul <= self.last_shoot_duration and not self.is_reloading:
             self.remain_bullet_num -= 1
             self.last_shoot_duration = 0
             if self.remain_bullet_num == 0:
@@ -85,6 +87,10 @@ class Gun:
             self.shoot_sound.play()
             return True
         return False
+
+    def Reload(self):
+        if self.remain_bullet_num < self.total_bullet_num and not self.is_reloading:
+            self.is_reloading = True
 
 
 class Bullet(GameObject):
