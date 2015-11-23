@@ -1,5 +1,6 @@
 import time
 
+font = None
 
 class GameState:
     def __init__(self, state):

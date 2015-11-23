@@ -2,6 +2,7 @@ from Object import *
 from Collision import *
 import Gun
 import math
+import Monster
 import game_framework
 
 playerData = None
@@ -17,6 +18,8 @@ class Player(Character):
     def __init__(self, x=0, y=0):
         super().__init__()
         self.x, self.y = x, y
+        self.maxhp = playerData['hp']
+        self.hp = self.maxhp
 
         if self.PPM is None:
             self.PPM = 1 / playerData['mpp']
@@ -41,9 +44,8 @@ class Player(Character):
                                    playerData['cy'], playerData['cy'] + playerData['ch'])
 
         self.state = playerData['currentState']
-        self.isJump = False
         self.isShooting = False
-        self.gun = Gun.Gun()
+        self.gun = Gun.Gun('PLAYER')
         self.targetX, self.targetY = self.x + 1, self.y
 
     def GetCollisionBox(self):
@@ -67,6 +69,7 @@ class Player(Character):
         anim = self.animationList[self.state]
         x, y = Camera.GetCameraPos(self.x, self.y)
         anim.image.clip_draw(int(self.frame) % anim.frame * anim.w, 0, anim.w, anim.h, x, y)
+        game_framework.font.draw(x-20, y + 30, 'hp : %d' % self.hp, (1, 1, 1))
         gunX, gunY = x + 10, y - 25
         tx, ty = max(self.targetX, gunX+1), self.targetY
         rad = math.atan2(ty - gunY, tx - gunX)
@@ -97,7 +100,7 @@ class Player(Character):
             vcos, vsin = math.cos(rad), math.sin(rad)
 
             bullet = Gun.Bullet(vcos + gx, vsin + gy + 3,
-                                self.gun.bullet_image, self.gun.damage,
+                                self.gun.bullet_image, 'PLAYER', self.gun.damage,
                                 vcos*self.gun.bullet_speed, vsin*self.gun.bullet_speed, rad)
 
             stage = game_framework.get_top_state()
@@ -122,3 +125,9 @@ class Player(Character):
         elif event.type == SDL_MOUSEBUTTONUP:
             if event.button == SDL_BUTTON_LEFT:
                 self.isShooting = False
+
+    def Collision(self, other):
+        if self.state == 'MELEE' and isinstance(other, Monster.Monster):
+            other.hp -= 50
+            if other.hp <= 0:
+                other.isDelete = True

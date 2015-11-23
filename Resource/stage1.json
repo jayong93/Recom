@@ -9,6 +9,42 @@
       "y": 320
     },
     {
+      "type": "duck",
+      "x": 1500,
+      "y": 500,
+      "gun": "pistol"
+    },
+    {
+      "type": "duck",
+      "x": 2000,
+      "y": 500,
+      "gun": "pistol"
+    },
+    {
+      "type": "duck",
+      "x": 2300,
+      "y": 500,
+      "gun": "pistol"
+    },
+    {
+      "type": "duck",
+      "x": 3000,
+      "y": 500,
+      "gun": "pistol"
+    },
+    {
+      "type": "duck",
+      "x": 3300,
+      "y": 500,
+      "gun": "pistol"
+    },
+    {
+      "type": "duck",
+      "x": 4500,
+      "y": 500,
+      "gun": "pistol"
+    },
+    {
       "type": "teleporter",
       "x": 7600,
       "y": 290

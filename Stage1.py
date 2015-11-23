@@ -3,6 +3,7 @@ import Map
 import Player
 import Gun
 import Cursor
+import Monster
 from Object import *
 from pico2d import *
 
@@ -18,7 +19,7 @@ def enter():
     global objList, map, nextStage, player, bgm
 
     player = Player.player
-    player.gun.load_data(Gun.sniperRifleData)
+    player.gun.change_gun(Gun.sniperRifleData)
 
     objList = {PLAYER: [player], MONSTER: [], OBJECT: [], TELEPORT: []}
 
@@ -36,8 +37,9 @@ def enter():
     for obj in mapObject:
         if obj['type'] == 'player':
             player.x, player.y = obj['x'], obj['y']
-        elif obj['type'] == 'monster':
-            pass
+        elif obj['type'] == 'duck':
+            m = Monster.Duck(obj['x'], obj['y'], obj['gun'])
+            objList[MONSTER].append(m)
         elif obj['type'] == 'teleporter':
             o = Teleporter(obj['x'], obj['y'])
             objList[TELEPORT].append(o)
@@ -75,11 +77,11 @@ def handle_events(frame_time):
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
             elif event.key == SDLK_1:
-                player.gun.load_data(Gun.pistolData)
+                player.gun.change_gun(Gun.pistolData)
             elif event.key == SDLK_2:
-                player.gun.load_data(Gun.machineGunData)
+                player.gun.change_gun(Gun.machineGunData)
             elif event.key == SDLK_3:
-                player.gun.load_data(Gun.sniperRifleData)
+                player.gun.change_gun(Gun.sniperRifleData)
 
 
 def update(frame_time):
@@ -135,12 +137,23 @@ def update(frame_time):
                 obj.vy -= 0.3 * obj.PPM * frame_time
 
     # 플레이어와 몬스터, 기타 오브젝트 충돌체크
-    pcb = player.GetCollisionBox()
-    for t in range(1, 3):
-        for obj in objList[t]:
-            ocb = obj.GetCollisionBox()
-            if pcb.CollisionCheck(ocb):
-                obj.Collision(player)
+    # pcb = player.GetCollisionBox()
+    # for t in range(1, 3):
+    #     for obj in objList[t]:
+    #         ocb = obj.GetCollisionBox()
+    #         if pcb.CollisionCheck(ocb):
+    #             obj.Collision(player)
+
+    for t1 in range(3):
+        for obj1 in objList[t1]:
+            obj1ColBox = obj1.GetCollisionBox()
+            for t2 in range(t1, 3):
+                for obj2 in objList[t2]:
+                    obj2ColBox = obj2.GetCollisionBox()
+                    if obj1ColBox.CollisionCheck(obj2ColBox):
+                        obj1.Collision(obj2)
+                        obj2.Collision(obj1)
+
 
     # 출구 충돌 체크
     pcb = player.GetCollisionBox()
@@ -154,7 +167,10 @@ def update(frame_time):
     for t in objList:
         for o in objList[t]:
             if o.isDelete:
-                objList[t].remove(o)
+                if t == PLAYER:
+                    game_framework.quit()
+                else:
+                    objList[t].remove(o)
 
 
 def draw(frame_time):

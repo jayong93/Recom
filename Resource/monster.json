@@ -1,0 +1,28 @@
+{
+	"mpp" : 0.015,
+	"Duck": {
+		"init_state": "IDLE",
+		"hp": 130,
+		"colBox": [43, 79, 6, 67],
+		"run_speed": 3.5,
+		"detect_range": 700,
+		"animation": {
+			"IDLE": [
+				"resource/spr_duck_idle.png",
+				"true",
+				7,
+				114,
+				94,
+				1
+			],
+			"MOVE": [
+				"resource/spr_duck_walk.png",
+				"true",
+				6,
+				114,
+				94,
+				0.5
+			]
+		}
+	}
+}

@@ -2,9 +2,9 @@
 	"image": "resource/machine_gun.png",
 	"bullet_image": "resource/machine_gun_bullet.png",
 	"shoot_sound": "resource/machine_gun.wav",
-	"damage": 10,
+	"damage": 13,
 	"shot_speed": 0.1,
 	"reload_speed": 2.0,
-	"bullet_speed": 40,
+	"bullet_speed": 35,
 	"total_bullet_num": 40
 }

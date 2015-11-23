@@ -2,6 +2,8 @@ from Object import *
 from pico2d import *
 import Cursor
 import Camera
+import Player
+import Monster
 
 pistolData = None
 machineGunData = None
@@ -10,8 +12,9 @@ reloadSound = None
 
 
 class Gun:
-    def __init__(self):
+    def __init__(self, owner_type):
         self.image = None
+        self.left_image = None
         self.bullet_image = None
         self.shoot_sound = None
         self.damage = 0
@@ -23,9 +26,11 @@ class Gun:
         self.last_shoot_duration = 0
         self.reload_duration = 0
         self.is_reloading = False
+        self.owner_type = owner_type
 
-    def load_data(self, data):
+    def change_gun(self, data):
         if type(data['image']) == str:
+            data['left_image'] = load_image(data['image'][0:-4] + '_left.png')
             data['image'] = load_image(data['image'])
         if type(data['bullet_image']) == str:
             data['bullet_image'] = load_image(data['bullet_image'])
@@ -33,6 +38,7 @@ class Gun:
             data['shoot_sound'] = load_wav(data['shoot_sound'])
             data['shoot_sound'].set_volume(120)
         self.image = data['image']
+        self.left_image = data['left_image']
         self.bullet_image = data['bullet_image']
         self.shoot_sound = data['shoot_sound']
         self.damage = data['damage']
@@ -41,7 +47,7 @@ class Gun:
         self.bullet_speed = data['bullet_speed']
         self.total_bullet_num = data['total_bullet_num']
         self.remain_bullet_num = self.total_bullet_num
-        self.last_shoot_duration = 0
+        self.last_shoot_duration = self.shot_speed
         self.reload_duration = 0
         self.is_reloading = False
         
@@ -49,7 +55,7 @@ class Gun:
         if self.shot_speed > self.last_shoot_duration:
             self.last_shoot_duration += frame_time
         if self.is_reloading:
-            if self.reload_duration == 0:
+            if self.reload_duration == 0 and self.owner_type == 'PLAYER':
                 global reloadSound
                 Mix_PlayChannelTimed(-1, reloadSound.wav, -1, int(self.reload_speed*1000))
                 Cursor.speed = self.reload_speed
@@ -61,7 +67,8 @@ class Gun:
                 self.remain_bullet_num = self.total_bullet_num
                 self.reload_duration = 0
                 self.is_reloading = False
-                Cursor.is_reload = False
+                if self.owner_type == 'PLAYER':
+                    Cursor.is_reload = False
 
     def Shoot(self):
         if self.shot_speed <= self.last_shoot_duration and not self.is_reloading:
@@ -77,12 +84,13 @@ class Gun:
 class Bullet(GameObject):
     PPM = 1/0.015
 
-    def __init__(self, x, y, image, damage=0, vx=0, vy=0, angle=0):
+    def __init__(self, x, y, image, owner, damage=0, vx=0, vy=0, angle=0):
         super().__init__()
         self.x, self.y = x, y
         self.image = image
         self.damage = damage
         self.angle = angle
+        self.owner = owner
         self.vx, self.vy = vx, vy
 
     def Draw(self, frame_time):
@@ -95,6 +103,12 @@ class Bullet(GameObject):
 
     def Collision(self, other):
         if other == 'MAP':
+            self.isDelete = True
+        elif (self.owner == 'PLAYER' and isinstance(other, Monster.Monster)) or\
+                (self.owner == 'MONSTER' and isinstance(other, Player.Player)):
+            other.hp -= self.damage
+            if other.hp <= 0:
+                other.isDelete = True
             self.isDelete = True
 
     def GetCollisionBox(self):

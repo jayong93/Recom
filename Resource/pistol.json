@@ -2,7 +2,7 @@
 	"image": "resource/pistol.png",
 	"bullet_image": "resource/bullet.png",
 	"shoot_sound": "resource/pistol.wav",
-	"damage": 10,
+	"damage": 30,
 	"shot_speed": 0.7,
 	"reload_speed": 1.2,
 	"bullet_speed": 30,
