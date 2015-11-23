@@ -60,7 +60,7 @@ class Player(Character):
         self.state = playerData['currentState']
         self.isShooting = False
         self.gun = Gun.Gun('PLAYER')
-        self.gun.reload_mul = 0.5
+        self.gun.reload_mul = 0.7
         self.targetX, self.targetY = self.x + 1, self.y
 
     def GetCollisionBox(self):
@@ -68,7 +68,7 @@ class Player(Character):
         x, y = self.x - anim.w / 2, self.y - anim.h / 2
         cb = self.colBox.Move(x, y)
         if self.state == 'MELEE':
-            cb.right += 20
+            cb.right += 30
         return cb
 
     def IdleUpdate(self, frame_time):
@@ -183,7 +183,7 @@ class Player(Character):
                 self.isShooting = False
 
     def Collision(self, other):
-        if self.state == 'MELEE' and isinstance(other, Monster.Monster):
+        if self.state == 'MELEE' and self.frame > self.animationList[self.state].frame * 0.7 and isinstance(other, Monster.Monster):
             if not (other in self.hit_object):
-                other.Hit(50)
+                other.Hit(70)
                 self.hit_object[other] = True

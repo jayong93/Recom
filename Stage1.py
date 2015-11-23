@@ -45,7 +45,7 @@ def enter():
             objList[TELEPORT].append(o)
 
     Camera.currentMap = map
-    Camera.offsetX = 200
+    Camera.offsetX = 300
     Camera.SetCameraPos(player.x, player.y)
 
 
