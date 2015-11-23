@@ -34,12 +34,6 @@
     },
     {
       "type": "duck",
-      "x": 3980,
-      "y": 500,
-      "gun": "pistol"
-    },
-    {
-      "type": "duck",
       "x": 4240,
       "y": 500,
       "gun": "pistol"
@@ -49,12 +43,6 @@
       "x": 4500,
       "y": 500,
       "gun": "machine_gun"
-    },
-    {
-      "type": "duck",
-      "x": 4770,
-      "y": 500,
-      "gun": "pistol"
     },
     {
       "type": "duck",
