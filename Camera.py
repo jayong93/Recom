@@ -1,6 +1,7 @@
 x, y = None, None
 w, h = 800, 600
 currentMap = None
+offsetX, offsetY = 0, 0
 
 
 def GetCameraPos(wx, wy):
@@ -10,6 +11,8 @@ def GetCameraPos(wx, wy):
 
 def SetCameraPos(wx, wy):
     global x, y, w, h
+    wx += offsetX
+    wy += offsetY
     mw, mh = currentMap.w, currentMap.h
     # 화면 왼쪽으로 넘어가려 할 때
     if wx < w/2:

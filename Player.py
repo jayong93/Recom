@@ -20,6 +20,19 @@ class Player(Character):
         self.x, self.y = x, y
         self.maxhp = playerData['hp']
         self.hp = self.maxhp
+        self.max_shield = playerData['shield']
+        self.shield = self.max_shield
+        self.shield_charge_time = playerData['shield_charge_time']
+        self.lastHitDuration = self.shield_charge_time
+        self.isShieldOn = False
+
+        if type(playerData['hit_sound']) == str:
+            playerData['hit_sound'] = load_wav(playerData['hit_sound'])
+            playerData['hit_sound'].set_volume(64)
+
+        if type(playerData['shield_hit_sound']) == str:
+            playerData['shield_hit_sound'] = load_wav(playerData['shield_hit_sound'])
+            playerData['shield_hit_sound'].set_volume(64)
 
         if self.PPM is None:
             self.PPM = 1 / playerData['mpp']
@@ -54,7 +67,7 @@ class Player(Character):
         return self.colBox.Move(x, y)
 
     def IdleUpdate(self, frame_time):
-        pass
+        self.vx = 0
 
     def MoveUpdate(self, frame_time):
         self.vx = self.RUN_SPEED
@@ -70,10 +83,15 @@ class Player(Character):
         x, y = Camera.GetCameraPos(self.x, self.y)
         anim.image.clip_draw(int(self.frame) % anim.frame * anim.w, 0, anim.w, anim.h, x, y)
         game_framework.font.draw(x-20, y + 30, 'hp : %d' % self.hp, (1, 1, 1))
+        game_framework.font.draw(x-40, y + 50, 'Shield : %d' % self.shield, (1, 1, 1))
         gunX, gunY = x + 10, y - 25
         tx, ty = max(self.targetX, gunX+1), self.targetY
         rad = math.atan2(ty - gunY, tx - gunX)
         self.gun.image.rotate_draw(rad, gunX, gunY)
+        if self.isShieldOn:
+            shield_anim = self.animationList['shield']
+            shield_anim.image.clip_draw(int(self.frame) % shield_anim.frame * shield_anim.w,
+                                         0, shield_anim.w, shield_anim.h, x, y)
         x, y = x - anim.w / 2, y - anim.h / 2
         draw_rectangle(self.colBox.left + x, self.colBox.bottom + y, self.colBox.right + x, self.colBox.top + y)
 
@@ -101,12 +119,36 @@ class Player(Character):
 
             bullet = Gun.Bullet(vcos + gx, vsin + gy + 3,
                                 self.gun.bullet_image, 'PLAYER', self.gun.damage,
-                                vcos*self.gun.bullet_speed, vsin*self.gun.bullet_speed, rad)
+                                vcos*self.gun.bullet_speed, vsin*self.gun.bullet_speed, rad, self.gun.piercing)
 
             stage = game_framework.get_top_state()
             stage.objList[stage.OBJECT].append(bullet)
 
+        # 쉴드 갱신
+        if self.lastHitDuration < self.shield_charge_time:
+            self.lastHitDuration += frame_time
+        elif self.shield < self.max_shield:
+            self.shield += 300 * frame_time
+            if self.shield > self.max_shield:
+                self.shield = self.max_shield
+
         self.stateList[self.state](frame_time)
+
+    def Hit(self, damage):
+        self.lastHitDuration = 0
+        if self.isShieldOn and self.shield > 0:
+            self.shield -= damage
+            playerData['shield_hit_sound'].play()
+            if self.shield <= 0:
+                self.hp += self.shield
+                self.shield = 0
+                self.isShieldOn = False
+        else:
+            playerData['hit_sound'].play()
+            self.hp -= damage
+
+        if self.hp <= 0:
+            self.isDelete = True
 
     def HandleEvent(self, event, frame_time):
         if event.type == SDL_KEYDOWN:
@@ -115,6 +157,12 @@ class Player(Character):
             elif event.key == SDLK_a and self.state != 'MELEE':
                 self.state = 'MELEE'
                 self.frame = 0
+            elif event.key == SDLK_s:
+                self.isShieldOn = True
+
+        elif event.type == SDL_KEYUP:
+            if event.key == SDLK_s:
+                self.isShieldOn = False
 
         elif event.type == SDL_MOUSEMOTION:
             self.targetX, self.targetY = event.x, Camera.h - event.y - 1

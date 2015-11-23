@@ -3,9 +3,13 @@
   "cy": 7,
   "cw": 40,
   "ch": 60,
-  "run_speed" : 3,
+  "run_speed" : 2.5,
   "mpp" : 0.015,
-  "hp": 20000,
+  "hp": 200,
+  "shield": 300,
+  "shield_charge_time": 2,
+  "shield_hit_sound": "resource/shield_hit.wav",
+  "hit_sound": "resource/player_hit.wav",
   "animation": {
     "IDLE": [
       "resource/spr_jimmy_idle.png",
@@ -30,6 +34,14 @@
       114,
       94,
       0.4
+    ],
+    "shield": [
+      "resource/shield.png",
+      "true",
+      6,
+      114,
+      94,
+      0.5
     ]
   },
   "currentState": "MOVE"

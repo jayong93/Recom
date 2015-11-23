@@ -6,6 +6,7 @@
 		"colBox": [43, 79, 6, 67],
 		"run_speed": 3.5,
 		"detect_range": 700,
+		"hit_sound" : "resource/monster_hit.wav",
 		"animation": {
 			"IDLE": [
 				"resource/spr_duck_idle.png",

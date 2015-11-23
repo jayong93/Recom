@@ -4,6 +4,7 @@
 	"shoot_sound": "resource/machine_gun.wav",
 	"damage": 13,
 	"shot_speed": 0.1,
+	"piercing": 0,
 	"reload_speed": 2.0,
 	"bullet_speed": 35,
 	"total_bullet_num": 40

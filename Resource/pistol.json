@@ -4,6 +4,7 @@
 	"shoot_sound": "resource/pistol.wav",
 	"damage": 30,
 	"shot_speed": 0.7,
+	"piercing": 0,
 	"reload_speed": 1.2,
 	"bullet_speed": 30,
 	"total_bullet_num": 15

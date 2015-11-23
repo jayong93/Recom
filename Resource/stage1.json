@@ -10,19 +10,13 @@
     },
     {
       "type": "duck",
-      "x": 1500,
+      "x": 1600,
       "y": 500,
       "gun": "pistol"
     },
     {
       "type": "duck",
-      "x": 2000,
-      "y": 500,
-      "gun": "pistol"
-    },
-    {
-      "type": "duck",
-      "x": 2300,
+      "x": 2200,
       "y": 500,
       "gun": "pistol"
     },
@@ -30,17 +24,41 @@
       "type": "duck",
       "x": 3000,
       "y": 500,
+      "gun": "machine_gun"
+    },
+    {
+      "type": "duck",
+      "x": 3400,
+      "y": 500,
+      "gun": "machine_gun"
+    },
+    {
+      "type": "duck",
+      "x": 3980,
+      "y": 500,
       "gun": "pistol"
     },
     {
       "type": "duck",
-      "x": 3300,
+      "x": 4240,
       "y": 500,
       "gun": "pistol"
     },
     {
       "type": "duck",
       "x": 4500,
+      "y": 500,
+      "gun": "machine_gun"
+    },
+    {
+      "type": "duck",
+      "x": 4770,
+      "y": 500,
+      "gun": "pistol"
+    },
+    {
+      "type": "duck",
+      "x": 5470,
       "y": 500,
       "gun": "pistol"
     },

@@ -41,19 +41,28 @@ class Monster(Character):
         self.vx = 0
         dist = math.fabs(self.target.x - self.x)
         if dist <= self.detect_range:
+            self.state = 'MOVE'
+            self.frame = 0
+
+    def MoveUpdate(self, frame_time):
+        dist = math.fabs(self.target.x - self.x)
+        if dist <= self.detect_range:
             if self.x > self.target.x:
                 self.direction = self.LEFT
             else:
                 self.direction = self.RIGHT
         else:
+            self.state = 'IDLE'
+            self.frame = 0
             self.direction = self.LEFT
 
-    def MoveUpdate(self, frame_time):
-        if self.direction == self.LEFT:
-            self.vx = -self.run_speed
+        if dist >= self.detect_range/2:
+            if self.direction == self.LEFT:
+                self.vx = -self.run_speed
+            else:
+                self.vx = self.run_speed
         else:
-            self.vx = self.run_speed
-
+            self.vx = 0
 
     def Draw(self, frame_time):
         anim = self.animationList[self.state]
@@ -100,8 +109,7 @@ class Monster(Character):
         self.gun.Update(frame_time)
 
         # 발포
-        dist = math.fabs(self.target.x - self.x)
-        if dist <= self.detect_range and self.gun.Shoot():
+        if self.state == 'MOVE' and self.gun.Shoot():
             if self.direction == self.LEFT:
                 gx = self.x - 10
             else:
@@ -117,18 +125,27 @@ class Monster(Character):
 
             bullet = Gun.Bullet(vcos + gx, vsin + gy + 3,
                                 self.gun.bullet_image, 'MONSTER', self.gun.damage,
-                                vcos*self.gun.bullet_speed, vsin*self.gun.bullet_speed, rad)
+                                vcos*self.gun.bullet_speed, vsin*self.gun.bullet_speed, rad, self.gun.piercing)
 
             stage = game_framework.get_top_state()
             stage.objList[stage.OBJECT].append(bullet)
 
         self.stateList[self.state](frame_time)
 
+    def Hit(self, damage):
+        self.hp -= damage
+        self.hit_sound.play()
+        if self.hp <= 0:
+            self.isDelete = True
 
 class Duck(Monster):
+    hit_sound = None
     def __init__(self, x=0, y=0, gun='pistol'):
         super().__init__(x, y)
         data = monsterData['Duck']
+        if self.hit_sound is None:
+            self.hit_sound = load_wav(data['hit_sound'])
+            self.hit_sound.set_volume(48)
         self.maxhp = data['hp']
         self.hp = self.maxhp
         self.state = data['init_state']

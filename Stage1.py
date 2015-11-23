@@ -45,7 +45,8 @@ def enter():
             objList[TELEPORT].append(o)
 
     Camera.currentMap = map
-    Camera.SetCameraPos(player.x + 300, player.y)
+    Camera.offsetX = 300
+    Camera.SetCameraPos(player.x, player.y)
 
 
 def exit():
@@ -109,19 +110,20 @@ def update(frame_time):
                         obj.vy = 0
                         bottom = obj.GetCollisionBox().bottom
                         obj.y += cb.top - bottom
-                    elif pcb.right >= cb.left:
+                    elif pcb.right > cb.left > pcb.left:
                         right = obj.GetCollisionBox().right
                         obj.x += cb.left - right
-                    elif pcb.left <= cb.right:
+                    elif pcb.left < cb.right < pcb.right:
                         left = obj.GetCollisionBox().left
                         obj.x += cb.right - left
+
         # 일반 오브젝트(총알)을 맵과 충돌체크
         for obj in objList[OBJECT]:
             if cb.CollisionCheck(obj.GetCollisionBox()):
                 obj.Collision('MAP')
 
     # 카메라가 플레이어를 따라다니게
-    Camera.SetCameraPos(player.x + 300, player.y)
+    Camera.SetCameraPos(player.x, player.y)
 
     # 중력 적용 체크
     for t in range(2):
@@ -135,14 +137,6 @@ def update(frame_time):
                     break
             if fall_check:
                 obj.vy -= 0.3 * obj.PPM * frame_time
-
-    # 플레이어와 몬스터, 기타 오브젝트 충돌체크
-    # pcb = player.GetCollisionBox()
-    # for t in range(1, 3):
-    #     for obj in objList[t]:
-    #         ocb = obj.GetCollisionBox()
-    #         if pcb.CollisionCheck(ocb):
-    #             obj.Collision(player)
 
     for t1 in range(3):
         for obj1 in objList[t1]:

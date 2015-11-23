@@ -19,6 +19,7 @@ class Gun:
         self.shoot_sound = None
         self.damage = 0
         self.shot_speed = 0
+        self.piercing = False
         self.reload_speed = 0
         self.bullet_speed = 0
         self.total_bullet_num = 0
@@ -43,6 +44,10 @@ class Gun:
         self.shoot_sound = data['shoot_sound']
         self.damage = data['damage']
         self.shot_speed = data['shot_speed']
+        if data['piercing'] == 0:
+            self.piercing = False
+        else:
+            self.piercing = True
         self.reload_speed = data['reload_speed']
         self.bullet_speed = data['bullet_speed']
         self.total_bullet_num = data['total_bullet_num']
@@ -50,6 +55,7 @@ class Gun:
         self.last_shoot_duration = self.shot_speed
         self.reload_duration = 0
         self.is_reloading = False
+        Cursor.is_reload = False
         
     def Update(self, frame_time):
         if self.shot_speed > self.last_shoot_duration:
@@ -84,14 +90,16 @@ class Gun:
 class Bullet(GameObject):
     PPM = 1/0.015
 
-    def __init__(self, x, y, image, owner, damage=0, vx=0, vy=0, angle=0):
+    def __init__(self, x, y, image, owner, damage=0, vx=0, vy=0, angle=0, piercing=False):
         super().__init__()
         self.x, self.y = x, y
         self.image = image
         self.damage = damage
         self.angle = angle
+        self.piercing = piercing
         self.owner = owner
         self.vx, self.vy = vx, vy
+        self.hit_object = {}
 
     def Draw(self, frame_time):
         x, y = Camera.GetCameraPos(self.x, self.y)
@@ -106,10 +114,11 @@ class Bullet(GameObject):
             self.isDelete = True
         elif (self.owner == 'PLAYER' and isinstance(other, Monster.Monster)) or\
                 (self.owner == 'MONSTER' and isinstance(other, Player.Player)):
-            other.hp -= self.damage
-            if other.hp <= 0:
-                other.isDelete = True
-            self.isDelete = True
+            if not (other in self.hit_object):
+                other.Hit(self.damage)
+                self.hit_object[other] = True
+            if self.piercing is False:
+                self.isDelete = True
 
     def GetCollisionBox(self):
         w, h = self.image.w, self.image.h
