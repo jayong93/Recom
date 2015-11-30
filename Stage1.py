@@ -92,8 +92,6 @@ def update(frame_time):
     for k in objList:
         for o in objList[k]:
             o.Update(frame_time)
-            if o.isDelete is True:
-                objList[k].remove(o)
 
     for cb in map.colBox:
         # 플레이어와 몬스터를 맵과 충돌 체크

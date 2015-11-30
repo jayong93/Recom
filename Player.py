@@ -87,6 +87,8 @@ class Player(Character):
 
     def DeathUpdate(self, frame_time):
         self.vx = 0
+        self.isShieldOn = False
+        self.isShooting = False
         if self.frame > self.anim.frame:
             self.isDelete = True
 
@@ -97,9 +99,12 @@ class Player(Character):
         game_framework.font.draw(x-20, y + 30, 'hp : %d' % self.hp, (1, 1, 1))
         game_framework.font.draw(x-40, y + 50, 'Shield : %d' % self.shield, (1, 1, 1))
         gunX, gunY = x + 10, y - 25
-        tx, ty = max(self.targetX, gunX+1), self.targetY
-        rad = math.atan2(ty - gunY, tx - gunX)
-        self.gun.image.rotate_draw(rad, gunX, gunY)
+        if self.state != 'DEATH':
+            tx, ty = max(self.targetX, gunX+1), self.targetY
+            rad = math.atan2(ty - gunY, tx - gunX)
+            self.gun.image.rotate_draw(rad, gunX, gunY)
+        else:
+            self.gun.image.draw(gunX, gunY)
         if self.isShieldOn:
             shield_anim = self.animationList['shield']
             shield_anim.image.clip_draw(int(self.frame) % shield_anim.frame * shield_anim.w,
@@ -114,6 +119,9 @@ class Player(Character):
             self.frame += anim.frame * (1 / anim.time) * frame_time
         elif anim.repeat:
             self.frame -= anim.frame
+
+        if anim == self.animationList['hit'] and self.frame > anim.frame:
+            self.ChangeState(self.state)
 
         # 총 정보 갱신
         self.gun.Update(frame_time)
@@ -158,6 +166,8 @@ class Player(Character):
                     self.isShieldOn = False
             else:
                 playerData['hit_sound'].play()
+                self.anim = self.animationList['hit']
+                self.frame = 0.0
                 self.hp -= damage
 
             if self.hp <= 0:
@@ -182,7 +192,7 @@ class Player(Character):
         elif event.type == SDL_MOUSEMOTION:
             self.targetX, self.targetY = event.x, Camera.h - event.y - 1
 
-        elif event.type == SDL_MOUSEBUTTONDOWN:
+        elif event.type == SDL_MOUSEBUTTONDOWN and self.state != 'DEATH':
             if event.button == SDL_BUTTON_LEFT:
                 self.isShooting = True
         elif event.type == SDL_MOUSEBUTTONUP:

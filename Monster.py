@@ -126,8 +126,7 @@ class Monster(Character):
             self.frame -= anim.frame
 
         if anim == self.animationList['hit'] and self.frame >= self.anim.frame:
-            self.frame = 0.0
-            self.anim = self.animationList[self.state]
+            self.ChangeState(self.state)
 
         # 총 정보 갱신
         self.gun.Update(frame_time)

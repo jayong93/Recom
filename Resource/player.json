@@ -5,7 +5,7 @@
   "ch": 60,
   "run_speed" : 2.5,
   "mpp" : 0.015,
-  "hp": 200,
+  "hp": 20000,
   "shield": 300,
   "shield_charge_time": 2,
   "shield_hit_sound": "resource/shield_hit.wav",
@@ -42,6 +42,14 @@
       114,
       94,
       0.7
+    ],
+    "hit": [
+      "resource/spr_jimmy_hit.png",
+      "false",
+      2,
+      114,
+      94,
+      0.1
     ],
     "shield": [
       "resource/shield.png",
