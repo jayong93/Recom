@@ -39,6 +39,13 @@ class Character(GameObject):
         self.state = None
         self.colBox = None
         self.vx, self.vy = 0.0, 0.0
+        self.anim = None
+
+    def ChangeState(self, state):
+        self.state = state
+        self.frame = 0.0
+        if self.animationList is not None:
+            self.anim = self.animationList[self.state]
 
 
 class AnimationObject(GameObject):

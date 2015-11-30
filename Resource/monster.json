@@ -23,6 +23,22 @@
 				114,
 				94,
 				0.5
+			],
+			"DEATH": [
+				"resource/spr_duck_death.png",
+				"false",
+				11,
+				114,
+				94,
+				1
+			],
+			"hit": [
+				"resource/spr_duck_hit.png",
+				"false",
+				2,
+				114,
+				94,
+				0.1
 			]
 		}
 	}

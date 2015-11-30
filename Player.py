@@ -51,20 +51,22 @@ class Player(Character):
             Player.stateList = {
                 'IDLE': self.IdleUpdate,
                 'MOVE': self.MoveUpdate,
-                'MELEE': self.MeleeUpdate
+                'MELEE': self.MeleeUpdate,
+                'DEATH': self.DeathUpdate
             }
 
         self.colBox = CollisionBox(playerData['cx'], playerData['cx'] + playerData['cw'],
                                    playerData['cy'], playerData['cy'] + playerData['ch'])
 
         self.state = playerData['currentState']
+        self.ChangeState(self.state)
         self.isShooting = False
         self.gun = Gun.Gun('PLAYER')
         self.gun.reload_mul = 0.7
         self.targetX, self.targetY = self.x + 1, self.y
 
     def GetCollisionBox(self):
-        anim = self.animationList[self.state]
+        anim = self.anim
         x, y = self.x - anim.w / 2, self.y - anim.h / 2
         cb = self.colBox.Move(x, y)
         if self.state == 'MELEE':
@@ -79,13 +81,17 @@ class Player(Character):
 
     def MeleeUpdate(self, frame_time):
         self.vx = 0
-        if self.frame > self.animationList['MELEE'].frame:
-            self.state = 'MOVE'
-            self.frame = 0
+        if self.frame > self.anim.frame:
+            self.ChangeState('MOVE')
             self.hit_object.clear()
 
+    def DeathUpdate(self, frame_time):
+        self.vx = 0
+        if self.frame > self.anim.frame:
+            self.isDelete = True
+
     def Draw(self, frame_time):
-        anim = self.animationList[self.state]
+        anim = self.anim
         x, y = Camera.GetCameraPos(self.x, self.y)
         anim.image.clip_draw(int(self.frame) % anim.frame * anim.w, 0, anim.w, anim.h, x, y)
         game_framework.font.draw(x-20, y + 30, 'hp : %d' % self.hp, (1, 1, 1))
@@ -103,7 +109,7 @@ class Player(Character):
 
     def Update(self, frame_time):
         # 애니메이션 프레임 처리
-        anim = self.animationList[self.state]
+        anim = self.anim
         if self.frame <= anim.frame:
             self.frame += anim.frame * (1 / anim.time) * frame_time
         elif anim.repeat:
@@ -141,28 +147,29 @@ class Player(Character):
         self.y += self.vy * self.PPM * frame_time
 
     def Hit(self, damage):
-        self.lastHitDuration = 0
-        if self.isShieldOn and self.shield > 0:
-            self.shield -= damage
-            playerData['shield_hit_sound'].play()
-            if self.shield <= 0:
-                self.hp += self.shield
-                self.shield = 0
-                self.isShieldOn = False
-        else:
-            playerData['hit_sound'].play()
-            self.hp -= damage
+        if self.state != 'DEATH':
+            self.lastHitDuration = 0
+            if self.isShieldOn and self.shield > 0:
+                self.shield -= damage
+                playerData['shield_hit_sound'].play()
+                if self.shield <= 0:
+                    self.hp += self.shield
+                    self.shield = 0
+                    self.isShieldOn = False
+            else:
+                playerData['hit_sound'].play()
+                self.hp -= damage
 
-        if self.hp <= 0:
-            self.isDelete = True
+            if self.hp <= 0:
+                self.hp = 0
+                self.ChangeState('DEATH')
 
     def HandleEvent(self, event, frame_time):
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_SPACE and self.vy == 0:
                 self.vy = 7
             elif event.key == SDLK_a and self.state != 'MELEE':
-                self.state = 'MELEE'
-                self.frame = 0
+                self.ChangeState('MELEE')
             elif event.key == SDLK_LSHIFT and self.shield >= 1:
                 self.isShieldOn = True
             elif event.key == SDLK_r:

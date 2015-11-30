@@ -123,7 +123,7 @@ class Bullet(GameObject):
             if not (other in self.hit_object):
                 other.Hit(self.damage)
                 self.hit_object[other] = True
-            if self.piercing is False:
+            if self.piercing is False and other.state != 'DEATH':
                 self.isDelete = True
 
     def GetCollisionBox(self):

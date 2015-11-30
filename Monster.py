@@ -20,8 +20,7 @@ class Monster(Character):
         self.maxhp = 0
         self.hp = 0
         self.direction = self.LEFT
-        self.stateList = {'IDLE': self.IdleUpdate, 'MOVE': self.MoveUpdate}
-        self.animationList = {}
+        self.stateList = {'IDLE': self.IdleUpdate, 'MOVE': self.MoveUpdate, 'DEATH': self.DeathUpdate}
         self.run_speed = 0
         self.detect_range = 0
         self.isShooting = False
@@ -41,8 +40,7 @@ class Monster(Character):
         self.vx = 0
         dist = math.fabs(self.target.x - self.x)
         if dist <= self.detect_range:
-            self.state = 'MOVE'
-            self.frame = 0
+            self.ChangeState('MOVE')
 
     def MoveUpdate(self, frame_time):
         dist = math.fabs(self.target.x - self.x)
@@ -52,8 +50,7 @@ class Monster(Character):
             else:
                 self.direction = self.RIGHT
         else:
-            self.state = 'IDLE'
-            self.frame = 0
+            self.ChangeState('IDLE')
             self.direction = self.LEFT
             return
 
@@ -80,11 +77,18 @@ class Monster(Character):
                     self.vy = 7
                     break
 
+    def DeathUpdate(self, frame_time):
+        self.vx = 0
+        self.target = None
+        if self.frame >= self.anim.frame:
+            self.isDelete = True
+
     def Draw(self, frame_time):
-        anim = self.animationList[self.state]
+        anim = self.anim
         x, y = Camera.GetCameraPos(self.x, self.y)
         anim.image.clip_draw(int(self.frame) % anim.frame * anim.w, anim.h * self.direction, anim.w, anim.h, x, y)
         game_framework.font.draw(x-20, y + 30, 'hp : %d' % self.hp, (1, 1, 1))
+
         if self.direction == self.LEFT:
             gunX = x - 10
         else:
@@ -101,8 +105,11 @@ class Monster(Character):
                 self.gun.image.rotate_draw(rad, gunX, gunY)
             else:
                 self.gun.left_image.rotate_draw(rad + math.pi, gunX, gunY)
+        elif self.direction == self.LEFT:
+            self.gun.left_image.draw(gunX, gunY)
         else:
             self.gun.image.draw(gunX, gunY)
+
         if self.direction == self.RIGHT:
             x, y = x - anim.w / 2, y - anim.h / 2
         else:
@@ -112,11 +119,15 @@ class Monster(Character):
 
     def Update(self, frame_time):
         # 애니메이션 프레임 처리
-        anim = self.animationList[self.state]
+        anim = self.anim
         if self.frame <= anim.frame:
             self.frame += anim.frame * (1 / anim.time) * frame_time
         elif anim.repeat:
             self.frame -= anim.frame
+
+        if anim == self.animationList['hit'] and self.frame >= self.anim.frame:
+            self.frame = 0.0
+            self.anim = self.animationList[self.state]
 
         # 총 정보 갱신
         self.gun.Update(frame_time)
@@ -149,29 +160,39 @@ class Monster(Character):
         self.y += self.vy * self.PPM * frame_time
 
     def Hit(self, damage):
-        self.hp -= damage
-        self.hit_sound.play()
-        if self.hp <= 0:
-            self.isDelete = True
+        if self.state != 'DEATH':
+            self.hp -= damage
+            self.hit_sound.play()
+            self.anim = self.animationList['hit']
+            self.frame = 0.0
+            if self.hp <= 0:
+                self.hp = 0
+                self.ChangeState('DEATH')
 
 class Duck(Monster):
     hit_sound = None
+    animationList = None
+
     def __init__(self, x=0, y=0, gun='pistol'):
         super().__init__(x, y)
         data = monsterData['Duck']
         if self.hit_sound is None:
             self.hit_sound = load_wav(data['hit_sound'])
             self.hit_sound.set_volume(48)
+        if self.animationList is None:
+            self.animationList = {}
+            for s in data['animation']:
+                a = data['animation'][s]
+                self.animationList[s] = Animation(a[0], a[1], a[2], a[3], a[4], a[5])
         self.maxhp = data['hp']
         self.hp = self.maxhp
         self.state = data['init_state']
+        self.ChangeState(self.state)
         self.run_speed = data['run_speed']
         self.detect_range = data['detect_range']
         cb = data['colBox']
         self.colBox = CollisionBox(cb[0], cb[1], cb[2], cb[3])
-        for s in data['animation']:
-            a = data['animation'][s]
-            self.animationList[s] = Animation(a[0], a[1], a[2], a[3], a[4], a[5])
+
         if gun == 'pistol':
             self.gun.change_gun(Gun.pistolData)
         elif gun == 'machine_gun':
