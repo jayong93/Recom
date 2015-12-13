@@ -4,9 +4,9 @@ import Camera
 
 
 class GameObject:
-    def __init__(self):
-        self.x = 0
-        self.y = 0
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
         self.isDelete = False
 
     def Move(self, x, y):
@@ -20,6 +20,9 @@ class GameObject:
         pass
 
     def Collision(self, other):
+        pass
+
+    def ChangeState(self, state):
         pass
 
 

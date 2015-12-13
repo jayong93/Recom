@@ -26,6 +26,7 @@ class Player(Character):
         self.lastHitDuration = self.shield_charge_time
         self.isShieldOn = False
         self.hit_object = {}
+        self.is_get_item = False
 
         if type(playerData['hit_sound']) == str:
             playerData['hit_sound'] = load_wav(playerData['hit_sound'])
@@ -62,7 +63,6 @@ class Player(Character):
         self.ChangeState(self.state)
         self.isShooting = False
         self.gun = Gun.Gun('PLAYER')
-        self.gun.reload_mul = 0.7
         self.targetX, self.targetY = self.x + 1, self.y
 
     def GetCollisionBox(self):
@@ -155,7 +155,7 @@ class Player(Character):
         self.y += self.vy * self.PPM * frame_time
 
     def Hit(self, damage):
-        if self.state != 'DEATH':
+        if self.state != 'DEATH' and self.state != 'MELEE':
             self.lastHitDuration = 0
             if self.isShieldOn and self.shield > 0:
                 self.shield -= damage
@@ -184,10 +184,14 @@ class Player(Character):
                 self.isShieldOn = True
             elif event.key == SDLK_r:
                 self.gun.Reload()
+            elif event.key == SDLK_e:
+                self.is_get_item = True
 
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_LSHIFT:
                 self.isShieldOn = False
+            elif event.key == SDLK_e:
+                self.is_get_item = False
 
         elif event.type == SDL_MOUSEMOTION:
             self.targetX, self.targetY = event.x, Camera.h - event.y - 1

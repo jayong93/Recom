@@ -41,5 +41,47 @@
 				0.1
 			]
 		}
+	},
+	"Turtle": {
+		"init_state": "IDLE",
+		"hp": 200,
+		"colBox": [30, 80, 3, 70],
+		"run_speed": 4.0,
+		"detect_range": 700,
+		"hit_sound" : "resource/monster_hit.wav",
+		"animation": {
+			"IDLE": [
+				"resource/spr_turtle_idle.png",
+				"true",
+				7,
+				114,
+				94,
+				1
+			],
+			"MOVE": [
+				"resource/spr_turtle_walk.png",
+				"true",
+				6,
+				114,
+				94,
+				0.5
+			],
+			"DEATH": [
+				"resource/spr_turtle_death.png",
+				"false",
+				11,
+				114,
+				94,
+				1
+			],
+			"hit": [
+				"resource/spr_turtle_hit.png",
+				"false",
+				2,
+				114,
+				94,
+				0.1
+			]
+		}
 	}
 }

@@ -1,17 +1,16 @@
-__author__ = 'Administrator'
-
 import game_framework
-import Stage1 as StartStage
+import Stage2 as StartStage
 import Player
 import Object
 import Gun
 import Monster
 import Cursor
+import Item
 from pico2d import *
 
 open_canvas(sync=True)
 # 믹서 채널 할당
-Mix_AllocateChannels(30)
+Mix_AllocateChannels(50)
 # 커서 숨기기
 hide_cursor()
 # 커서 로딩
@@ -25,6 +24,8 @@ with open('resource/monster.json', 'r') as f:
     Monster.monsterData = json.load(f)
 with open('resource/teleporter.json', 'r') as f:
     Object.Teleporter.data = json.load(f)
+with open('resource/item.json', 'r') as f:
+    Item.itemData = json.load(f)
 with open('resource/pistol.json', 'r') as f:
     Gun.pistolData = json.load(f)
 with open('resource/machine_gun.json', 'r') as f:

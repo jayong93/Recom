@@ -54,7 +54,7 @@ class Monster(Character):
             self.direction = self.LEFT
             return
 
-        if dist >= self.detect_range/2:
+        if dist >= self.detect_range / 2:
             if self.direction == self.LEFT:
                 self.vx = -self.run_speed
             else:
@@ -65,6 +65,8 @@ class Monster(Character):
         if self.vy == 0:
             cbList = game_framework.get_top_state().map.colBox
             rayBox = self.GetCollisionBox()
+
+            # 장애물 점프
             rayBox.top, rayBox.bottom = self.y + 1, self.y - 1
             if self.direction == self.LEFT:
                 rayBox.right = rayBox.left
@@ -77,6 +79,25 @@ class Monster(Character):
                     self.vy = 7
                     break
 
+            # 낭떨어지 정지
+            rayBox = self.GetCollisionBox()
+            rayBox.top = rayBox.bottom
+            rayBox.bottom -= 500
+            if self.direction == self.LEFT:
+                rayBox.right = rayBox.left - 1
+                rayBox.left -= 5
+            else:
+                rayBox.left = rayBox.right + 1
+                rayBox.right += 5
+
+            isFall = True
+            for cb in cbList:
+                if cb.CollisionCheck(rayBox):
+                    isFall = False
+                    break
+            if isFall:
+                self.vx = 0
+
     def DeathUpdate(self, frame_time):
         self.vx = 0
         self.target = None
@@ -87,7 +108,7 @@ class Monster(Character):
         anim = self.anim
         x, y = Camera.GetCameraPos(self.x, self.y)
         anim.image.clip_draw(int(self.frame) % anim.frame * anim.w, anim.h * self.direction, anim.w, anim.h, x, y)
-        game_framework.font.draw(x-20, y + 30, 'hp : %d' % self.hp, (1, 1, 1))
+        game_framework.font.draw(x - 20, y + 30, 'hp : %d' % self.hp, (1, 1, 1))
 
         if self.direction == self.LEFT:
             gunX = x - 10
@@ -97,9 +118,9 @@ class Monster(Character):
         if self.target is not None:
             tx, ty = Camera.GetCameraPos(self.target.x, self.target.y)
             if self.direction == self.LEFT:
-                tx = min(tx, gunX-1)
+                tx = min(tx, gunX - 1)
             else:
-                tx = max(tx, gunX+1)
+                tx = max(tx, gunX + 1)
             rad = math.atan2(ty - gunY, tx - gunX)
             if self.direction == self.RIGHT:
                 self.gun.image.rotate_draw(rad, gunX, gunY)
@@ -140,15 +161,15 @@ class Monster(Character):
             gy = self.y - 25
             tx, ty = self.target.x, self.target.y
             if self.direction == self.LEFT:
-                tx = min(tx, gx-1)
+                tx = min(tx, gx - 1)
             else:
-                tx = max(tx, gx+1)
-            rad = math.atan2(ty-gy, tx-gx)
+                tx = max(tx, gx + 1)
+            rad = math.atan2(ty - gy, tx - gx)
             vcos, vsin = math.cos(rad), math.sin(rad)
 
             bullet = Gun.Bullet(vcos + gx, vsin + gy + 3,
                                 self.gun.bullet_image, 'MONSTER', self.gun.damage,
-                                vcos*self.gun.bullet_speed, vsin*self.gun.bullet_speed, rad, self.gun.piercing)
+                                vcos * self.gun.bullet_speed, vsin * self.gun.bullet_speed, rad, self.gun.piercing)
 
             stage = game_framework.get_top_state()
             stage.objList[stage.OBJECT].append(bullet)
@@ -168,6 +189,7 @@ class Monster(Character):
                 self.hp = 0
                 self.ChangeState('DEATH')
 
+
 class Duck(Monster):
     hit_sound = None
     animationList = None
@@ -177,7 +199,39 @@ class Duck(Monster):
         data = monsterData['Duck']
         if self.hit_sound is None:
             self.hit_sound = load_wav(data['hit_sound'])
-            self.hit_sound.set_volume(48)
+            self.hit_sound.set_volume(30)
+        if self.animationList is None:
+            self.animationList = {}
+            for s in data['animation']:
+                a = data['animation'][s]
+                self.animationList[s] = Animation(a[0], a[1], a[2], a[3], a[4], a[5])
+        self.maxhp = data['hp']
+        self.hp = self.maxhp
+        self.state = data['init_state']
+        self.ChangeState(self.state)
+        self.run_speed = data['run_speed']
+        self.detect_range = data['detect_range']
+        cb = data['colBox']
+        self.colBox = CollisionBox(cb[0], cb[1], cb[2], cb[3])
+
+        if gun == 'pistol':
+            self.gun.change_gun(Gun.pistolData)
+        elif gun == 'machine_gun':
+            self.gun.change_gun(Gun.machineGunData)
+        elif gun == 'sniper_rifle':
+            self.gun.change_gun(Gun.sniperRifleData)
+
+
+class Turtle(Monster):
+    hit_sound = None
+    animationList = None
+
+    def __init__(self, x=0, y=0, gun='pistol'):
+        super().__init__(x, y)
+        data = monsterData['Turtle']
+        if self.hit_sound is None:
+            self.hit_sound = load_wav(data['hit_sound'])
+            self.hit_sound.set_volume(30)
         if self.animationList is None:
             self.animationList = {}
             for s in data['animation']:

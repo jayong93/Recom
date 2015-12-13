@@ -3,7 +3,7 @@
   "cy": 7,
   "cw": 40,
   "ch": 60,
-  "run_speed" : 2.5,
+  "run_speed" : 3.5,
   "mpp" : 0.015,
   "hp": 20000,
   "shield": 300,
@@ -25,7 +25,7 @@
       6,
       114,
       94,
-      0.7
+      0.5
     ],
     "MELEE": [
       "resource/spr_jimmy_melee.png",

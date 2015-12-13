@@ -6,7 +6,6 @@ import Cursor
 import Monster
 import Item
 import random
-import Stage2 as NextStage
 from Object import *
 from pico2d import *
 
@@ -22,13 +21,13 @@ def enter():
     global objList, map, nextStage, player, bgm
 
     player = Player.player
-    player.gun.change_gun(Gun.pistolData)
+    player.gun.change_gun(Gun.pistolData)   # 나중에 제거
 
     objList = {PLAYER: [player], MONSTER: [], OBJECT: [], TELEPORT: []}
 
-    with open('resource/stage1.json', 'r') as f:
+    with open('resource/stage2.json', 'r') as f:
         mapData = json.load(f)
-    map = Map.Map('stage1')
+    map = Map.Map('stage2')
     map.w, map.h = mapData['width'], mapData['height']
     bgm = load_music(mapData['bgm'])
     bgm.set_volume(120)
@@ -186,7 +185,7 @@ def update(frame_time):
         tcb = tp.GetCollisionBox()
         if tcb.CollisionCheck(pcb):
             if nextStage is None:
-                game_framework.change_state(NextStage)
+                game_framework.quit()
 
 
 def draw(frame_time):

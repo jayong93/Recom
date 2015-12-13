@@ -6,6 +6,6 @@
 	"shot_speed": 0.7,
 	"piercing": 0,
 	"reload_speed": 1.2,
-	"bullet_speed": 15,
+	"bullet_speed": 10,
 	"total_bullet_num": 15
 }

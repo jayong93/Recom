@@ -1,0 +1,275 @@
+{
+  "width": 7680,
+  "height": 768,
+  "bgm": "resource/bgm_stage1.mp3",
+  "object": [
+    {
+      "type": "player",
+      "x": 200,
+      "y": 320
+    },
+    {
+      "type": "duck",
+      "x": 1660,
+      "y": 500,
+      "gun": "random"
+    },
+    {
+      "type": "duck",
+      "x": 1968,
+      "y": 500,
+      "gun": "random"
+    },
+    {
+      "type": "turtle",
+      "x": 2472,
+      "y": 500,
+      "gun": "random"
+    },
+    {
+      "type": "turtle",
+      "x": 3386,
+      "y": 500,
+      "gun": "random"
+    },
+    {
+      "type": "duck",
+      "x": 4210,
+      "y": 500,
+      "gun": "random"
+    },
+    {
+      "type": "turtle",
+      "x": 5315,
+      "y": 500,
+      "gun": "random"
+    },
+    {
+      "type": "duck",
+      "x": 5434,
+      "y": 500,
+      "gun": "random"
+    },
+    {
+      "type": "turtle",
+      "x": 6920,
+      "y": 500,
+      "gun": "random"
+    },
+    {
+      "type": "duck",
+      "x": 6717,
+      "y": 500,
+      "gun": "random"
+    },
+    {
+      "type": "teleporter",
+      "x": 7600,
+      "y": 290
+    },
+    {
+      "type": "machine_gun",
+      "x": 1254,
+      "y": 290
+    },
+    {
+      "type": "pistol",
+      "x": 4664,
+      "y": 390
+    },
+    {
+      "type": "machine_gun",
+      "x": 4797,
+      "y": 390
+    },
+    {
+      "type": "sniper_rifle",
+      "x": 4931,
+      "y": 390
+    },
+    {
+      "type": "reload",
+      "x": 6433,
+      "y": 390
+    },
+    {
+      "type": "shot",
+      "x": 6481,
+      "y": 390
+    },
+    {
+      "type": "hp",
+      "x": 3582,
+      "y": 428
+    },
+    {
+      "type": "shield",
+      "x": 3072,
+      "y": 290
+    }
+  ],
+  "colBox": [
+    {
+      "left": -10,
+      "right": 0,
+      "bottom": 0,
+      "top": 768
+    },
+    {
+      "left": 7680,
+      "right": 7690,
+      "bottom": 0,
+      "top": 768
+    },
+    {
+      "left": 0,
+      "right": 896,
+      "bottom": 0,
+      "top": 256
+    },
+    {
+      "left": 1024,
+      "right": 1472,
+      "bottom": 0,
+      "top": 256
+    },
+    {
+      "left": 1600,
+      "right": 1792,
+      "bottom": 0,
+      "top": 256
+    },
+    {
+      "left": 1920,
+      "right": 2816,
+      "bottom": 0,
+      "top": 256
+    },
+    {
+      "left": 3008,
+      "right": 3520,
+      "bottom": 0,
+      "top": 256
+    },
+    {
+      "left": 3648,
+      "right": 7680,
+      "bottom": 0,
+      "top": 256
+    },
+    {
+      "left": 2175,
+      "right": 2792,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 2432,
+      "right": 2792,
+      "bottom": 256,
+      "top": 364
+    },
+    {
+      "left": 2560,
+      "right": 2792,
+      "bottom": 320,
+      "top": 428
+    },
+    {
+      "left": 2688,
+      "right": 2792,
+      "bottom": 384,
+      "top": 492
+    },
+    {
+      "left": 3264,
+      "right": 3519,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 3648,
+      "right": 3904,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 4480,
+      "right": 5120,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 5249,
+      "right": 5630,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 5824,
+      "right": 6208,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 6336,
+      "right": 6528,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 6656,
+      "right": 7038,
+      "bottom": 192,
+      "top": 300
+    },
+    {
+      "left": 4608,
+      "right": 4992,
+      "bottom": 256,
+      "top": 364
+    },
+    {
+      "left": 5374,
+      "right": 5504,
+      "bottom": 256,
+      "top": 364
+    },
+    {
+      "left": 5952,
+      "right": 6208,
+      "bottom": 256,
+      "top": 364
+    },
+    {
+      "left": 6400,
+      "right": 6528,
+      "bottom": 256,
+      "top": 364
+    },
+    {
+      "left": 6656,
+      "right": 6912,
+      "bottom": 256,
+      "top": 364
+    },
+    {
+      "left": 6080,
+      "right": 6208,
+      "bottom": 320,
+      "top": 428
+    },
+    {
+      "left": 6656,
+      "right": 6784,
+      "bottom": 320,
+      "top": 428
+    },
+    {
+      "left": 0,
+      "right": 7680,
+      "bottom": 768,
+      "top": 770
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "shield": {
+    "cx": 10,
+    "cy": 10,
+    "cw": 30,
+    "ch": 30,
+    "image": "resource/shield_up.png"
+  },
+  "hp": {
+    "cx": 10,
+    "cy": 10,
+    "cw": 30,
+    "ch": 30,
+    "image": "resource/hp_up.png"
+  },
+  "reload": {
+    "cx": 24,
+    "cy": 20,
+    "cw": 14,
+    "ch": 26,
+    "image": "resource/reload_up.png"
+  },
+  "shot": {
+    "cx": 24,
+    "cy": 20,
+    "cw": 14,
+    "ch": 26,
+    "image": "resource/reload_up.png"
+  },
+  "pistol": {
+    "cx": 0,
+    "cy": 0,
+    "cw": 34,
+    "ch": 16,
+    "image": "resource/pistol.png"
+  },
+  "machine_gun": {
+    "cx": 0,
+    "cy": 0,
+    "cw": 35,
+    "ch": 15,
+    "image": "resource/machine_gun.png"
+  },
+  "sniper_rifle": {
+    "cx": 0,
+    "cy": 0,
+    "cw": 60,
+    "ch": 18,
+    "image": "resource/sniper_rifle.png"
+  }
+}

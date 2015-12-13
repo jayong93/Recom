@@ -9,51 +9,91 @@
       "y": 320
     },
     {
+      "type": "reload",
+      "x": 600,
+      "y": 300
+    },
+    {
+      "type": "reload",
+      "x": 630,
+      "y": 300
+    },
+    {
+      "type": "reload",
+      "x": 660,
+      "y": 300
+    },
+    {
+      "type": "shot",
+      "x": 700,
+      "y": 300
+    },
+    {
+      "type": "shot",
+      "x": 730,
+      "y": 300
+    },
+    {
+      "type": "shot",
+      "x": 760,
+      "y": 300
+    },
+    {
       "type": "duck",
       "x": 1600,
       "y": 500,
-      "gun": "pistol"
+      "gun": "random"
     },
     {
       "type": "duck",
       "x": 2200,
       "y": 500,
-      "gun": "pistol"
+      "gun": "random"
     },
     {
       "type": "duck",
       "x": 3000,
       "y": 500,
-      "gun": "machine_gun"
+      "gun": "random"
     },
     {
-      "type": "duck",
+      "type": "turtle",
       "x": 3400,
       "y": 500,
-      "gun": "machine_gun"
+      "gun": "random"
     },
     {
-      "type": "duck",
+      "type": "turtle",
       "x": 4240,
       "y": 500,
-      "gun": "pistol"
+      "gun": "random"
     },
     {
-      "type": "duck",
+      "type": "turtle",
       "x": 4500,
       "y": 500,
-      "gun": "machine_gun"
+      "gun": "random"
     },
     {
       "type": "duck",
       "x": 5470,
       "y": 500,
-      "gun": "pistol"
+      "gun": "random"
     },
     {
       "type": "teleporter",
       "x": 7600,
       "y": 290
+    },
+    {
+      "type": "shield",
+      "x": 4000,
+      "y": 400
+    },
+    {
+      "type": "hp",
+      "x": 3200,
+      "y": 460
     }
   ],
   "colBox": [

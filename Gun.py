@@ -39,7 +39,7 @@ class Gun:
             data['bullet_image'] = load_image(data['bullet_image'])
         if type(data['shoot_sound']) == str:
             data['shoot_sound'] = load_wav(data['shoot_sound'])
-            data['shoot_sound'].set_volume(120)
+            data['shoot_sound'].set_volume(70)
         self.image = data['image']
         self.left_image = data['left_image']
         self.bullet_image = data['bullet_image']
