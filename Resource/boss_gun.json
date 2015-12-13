@@ -1,0 +1,11 @@
+{
+	"image": "resource/boss_gun.png",
+	"bullet_image": "resource/boss_gun_bullet.png",
+	"shoot_sound": "resource/sniper_rifle.wav",
+	"damage": 80,
+	"shot_speed": 1.5,
+	"piercing": 0,
+	"reload_speed": 4,
+	"bullet_speed": 20,
+	"total_bullet_num": 15
+}

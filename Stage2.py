@@ -22,7 +22,6 @@ def enter():
     global objList, map, player, bgm
 
     player = Player.player
-    player.gun.change_gun(Gun.pistolData)
 
     objList = {PLAYER: [player], MONSTER: [], OBJECT: [], TELEPORT: []}
 

@@ -224,10 +224,12 @@ class Player(Character):
                     self.boss_stage_dir += 1
                 if self.boss_stage_dir > 0:
                     self.direction = 1
-                    self.ChangeState('MOVE')
+                    if self.state != 'MOVE':
+                        self.ChangeState('MOVE')
                 elif self.boss_stage_dir < 0:
                     self.direction = -1
-                    self.ChangeState('MOVE')
+                    if self.state != 'MOVE':
+                        self.ChangeState('MOVE')
                 else:
                     self.ChangeState('IDLE')
 
@@ -244,10 +246,12 @@ class Player(Character):
                     self.boss_stage_dir -= 1
                 if self.boss_stage_dir > 0:
                     self.direction = 1
-                    self.ChangeState('MOVE')
+                    if self.state != 'MOVE':
+                        self.ChangeState('MOVE')
                 elif self.boss_stage_dir < 0:
                     self.direction = -1
-                    self.ChangeState('MOVE')
+                    if self.state != 'MOVE':
+                        self.ChangeState('MOVE')
                 else:
                     self.ChangeState('IDLE')
 

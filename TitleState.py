@@ -1,7 +1,7 @@
 import game_framework
 import Player
 import Gun
-import Stage1
+import BossStage as NextStage
 from pico2d import *
 
 name = "TitleState"
@@ -31,7 +31,7 @@ def handle_events(frame_time):
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
             elif event.key == SDLK_SPACE:
-                game_framework.change_state(Stage1)
+                game_framework.change_state(NextStage)
                 return
 
 

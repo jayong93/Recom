@@ -32,6 +32,8 @@ with open('resource/machine_gun.json', 'r') as f:
     Gun.machineGunData = json.load(f)
 with open('resource/sniper_rifle.json', 'r') as f:
     Gun.sniperRifleData = json.load(f)
+with open('resource/boss_gun.json', 'r') as f:
+    Gun.bossGunData = json.load(f)
 
 Player.player = Player.Player()
 Gun.reloadSound = load_wav('resource/reload.wav')

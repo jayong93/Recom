@@ -44,15 +44,10 @@ class Monster(Character):
 
     def MoveUpdate(self, frame_time):
         dist = math.fabs(self.target.x - self.x)
-        if dist <= self.detect_range:
-            if self.x > self.target.x:
-                self.direction = self.LEFT
-            else:
-                self.direction = self.RIGHT
-        else:
-            self.ChangeState('IDLE')
+        if self.x > self.target.x:
             self.direction = self.LEFT
-            return
+        else:
+            self.direction = self.RIGHT
 
         if dist >= self.detect_range / 2:
             if self.direction == self.LEFT:
@@ -183,6 +178,7 @@ class Monster(Character):
         if self.state != 'DEATH':
             self.hp -= damage
             self.hit_sound.play()
+            self.ChangeState('MOVE')
             self.anim = self.animationList['hit']
             self.frame = 0.0
             if self.hp <= 0:
@@ -252,3 +248,30 @@ class Turtle(Monster):
             self.gun.change_gun(Gun.machineGunData)
         elif gun == 'sniper_rifle':
             self.gun.change_gun(Gun.sniperRifleData)
+
+
+class Boss(Monster):
+    hit_sound = None
+    animationList = None
+
+    def __init__(self, x=0, y=0):
+        super().__init__(x, y)
+        data = monsterData['Boss']
+        if self.hit_sound is None:
+            self.hit_sound = load_wav(data['hit_sound'])
+            self.hit_sound.set_volume(120)
+        if self.animationList is None:
+            self.animationList = {}
+            for s in data['animation']:
+                a = data['animation'][s]
+                self.animationList[s] = Animation(a[0], a[1], a[2], a[3], a[4], a[5])
+        self.maxhp = data['hp']
+        self.hp = self.maxhp
+        self.state = data['init_state']
+        self.ChangeState(self.state)
+        self.run_speed = data['run_speed']
+        self.detect_range = data['detect_range']
+        cb = data['colBox']
+        self.colBox = CollisionBox(cb[0], cb[1], cb[2], cb[3])
+
+        self.gun.change_gun(Gun.bossGunData)

@@ -8,6 +8,7 @@ import Monster
 pistolData = None
 machineGunData = None
 sniperRifleData = None
+bossGunData = None
 reloadSound = None
 
 
@@ -38,8 +39,12 @@ class Gun:
         if type(data['bullet_image']) == str:
             data['bullet_image'] = load_image(data['bullet_image'])
         if type(data['shoot_sound']) == str:
+            if data is machineGunData:
+                vol = 45
+            else:
+                vol = 120
             data['shoot_sound'] = load_wav(data['shoot_sound'])
-            data['shoot_sound'].set_volume(70)
+            data['shoot_sound'].set_volume(vol)
         self.image = data['image']
         self.left_image = data['left_image']
         self.bullet_image = data['bullet_image']

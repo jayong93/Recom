@@ -70,6 +70,9 @@ def enter():
         elif obj['type'] == 'pistol' or obj['type'] == 'machine_gun' or obj['type'] == 'sniper_rifle':
             o = Item.GunItem(obj['x'], obj['y'], obj['type'])
             objList[OBJECT].append(o)
+        elif obj['type'] == 'Boss':
+            m = Monster.Boss(obj['x'], obj['y'])
+            objList[MONSTER].append(m)
 
     Camera.currentMap = map
     Camera.offsetX = 300
@@ -183,14 +186,9 @@ def update(frame_time):
                     return
                 else:
                     objList[t].remove(o)
-
-    # 출구 충돌 체크
-    pcb = player.GetCollisionBox()
-    for tp in objList[TELEPORT]:
-        tcb = tp.GetCollisionBox()
-        if tcb.CollisionCheck(pcb):
-            game_framework.change_state(Clear)
-            return
+                    if t == MONSTER:
+                        game_framework.change_state(Clear)
+                        return
 
 
 def draw(frame_time):

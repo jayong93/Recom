@@ -53,7 +53,7 @@
 			"IDLE": [
 				"resource/spr_turtle_idle.png",
 				"true",
-				7,
+				12,
 				114,
 				94,
 				1
@@ -69,7 +69,7 @@
 			"DEATH": [
 				"resource/spr_turtle_death.png",
 				"false",
-				11,
+				13,
 				114,
 				94,
 				1
@@ -80,6 +80,48 @@
 				2,
 				114,
 				94,
+				0.1
+			]
+		}
+	},
+	"Boss": {
+		"init_state": "IDLE",
+		"hp": 2000,
+		"colBox": [73, 146, 6, 102],
+		"run_speed": 4.5,
+		"detect_range": 700,
+		"hit_sound" : "resource/boss_hit.wav",
+		"animation": {
+			"IDLE": [
+				"resource/spr_boss_idle.png",
+				"true",
+				14,
+				228,
+				188,
+				1
+			],
+			"MOVE": [
+				"resource/spr_boss_walk.png",
+				"true",
+				6,
+				228,
+				188,
+				0.5
+			],
+			"DEATH": [
+				"resource/spr_boss_death.png",
+				"false",
+				12,
+				228,
+				188,
+				1
+			],
+			"hit": [
+				"resource/spr_boss_hit.png",
+				"false",
+				2,
+				228,
+				188,
 				0.1
 			]
 		}
