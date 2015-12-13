@@ -3,7 +3,6 @@ import Map
 import Player
 import Cursor
 import Monster
-import Gun
 import GameOver
 import Clear
 import Item
@@ -23,7 +22,6 @@ def enter():
 
     player = Player.player
     player.is_boss_stage = True
-    player.gun.change_gun(Gun.pistolData)
 
     objList = {PLAYER: [player], MONSTER: [], OBJECT: [], TELEPORT: []}
 

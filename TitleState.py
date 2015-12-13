@@ -1,10 +1,9 @@
 import game_framework
 import Player
 import Gun
-import BossStage as NextStage
+import Stage1 as NextStage
 from pico2d import *
 
-name = "TitleState"
 image = None
 
 

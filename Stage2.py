@@ -3,7 +3,6 @@ import Map
 import Player
 import Cursor
 import Monster
-import Gun
 import GameOver
 import BossStage
 import Item
