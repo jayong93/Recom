@@ -87,6 +87,10 @@ def quit():
     running = False
 
 
+def restart():
+    change_state(stack[-1])
+
+
 def run(start_state):
     global running, stack
     running = True

@@ -27,8 +27,8 @@ class ShieldUpItem(GameObject):
 
     def Collision(self, other):
         if isinstance(other, Player.Player):
-            other.max_shield += 100
-            other.shield += 100
+            other.max_shield += 50
+            other.shield += 50
             self.isDelete = True
 
 
@@ -80,7 +80,7 @@ class ShotUpItem(GameObject):
 
     def Collision(self, other):
         if isinstance(other, Player.Player):
-            other.gun.shot_mul = max(other.gun.shot_mul - 0.3, 0.1)
+            other.gun.shot_mul = max(other.gun.shot_mul - 0.15, 0.1)
             self.isDelete = True
 
 
@@ -106,7 +106,7 @@ class ReloadUpItem(GameObject):
 
     def Collision(self, other):
         if isinstance(other, Player.Player):
-            other.gun.reload_mul = max(other.gun.reload_mul - 0.3, 0.1)
+            other.gun.reload_mul = max(other.gun.reload_mul - 0.15, 0.1)
             self.isDelete = True
 
 

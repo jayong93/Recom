@@ -3,10 +3,11 @@ import Map
 import Player
 import Cursor
 import Monster
+import Gun
+import GameOver
+import Clear
 import Item
 import random
-import GameOver
-import Stage2 as NextStage
 from Object import *
 from pico2d import *
 
@@ -21,16 +22,15 @@ def enter():
     global objList, map, player, bgm
 
     player = Player.player
+    player.is_boss_stage = True
+    player.gun.change_gun(Gun.pistolData)
 
     objList = {PLAYER: [player], MONSTER: [], OBJECT: [], TELEPORT: []}
 
-    with open('resource/stage1.json', 'r') as f:
+    with open('resource/boss_stage.json', 'r') as f:
         mapData = json.load(f)
-    map = Map.Map('stage1')
+    map = Map.Map('boss_stage')
     map.w, map.h = mapData['width'], mapData['height']
-    bgm = load_music(mapData['bgm'])
-    bgm.set_volume(120)
-    bgm.repeat_play()
     cbList = mapData['colBox']
     for cb in cbList:
         map.colBox.append(CollisionBox(cb['left'], cb['right'], cb['bottom'], cb['top']))
@@ -189,7 +189,7 @@ def update(frame_time):
     for tp in objList[TELEPORT]:
         tcb = tp.GetCollisionBox()
         if tcb.CollisionCheck(pcb):
-            game_framework.change_state(NextStage)
+            game_framework.change_state(Clear)
             return
 
 

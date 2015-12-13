@@ -27,6 +27,9 @@ class Player(Character):
         self.isShieldOn = False
         self.hit_object = {}
         self.is_get_item = False
+        self.is_boss_stage = False
+        self.boss_stage_dir = 0
+        self.direction = 1
 
         if type(playerData['hit_sound']) == str:
             playerData['hit_sound'] = load_wav(playerData['hit_sound'])
@@ -65,6 +68,28 @@ class Player(Character):
         self.gun = Gun.Gun('PLAYER')
         self.targetX, self.targetY = self.x + 1, self.y
 
+    def Init(self):
+        self.maxhp = playerData['hp']
+        self.hp = self.maxhp
+        self.max_shield = playerData['shield']
+        self.shield = self.max_shield
+        self.shield_charge_time = playerData['shield_charge_time']
+        self.lastHitDuration = self.shield_charge_time
+        self.isShieldOn = False
+        self.hit_object = {}
+        self.is_get_item = False
+        self.colBox = CollisionBox(playerData['cx'], playerData['cx'] + playerData['cw'],
+                                   playerData['cy'], playerData['cy'] + playerData['ch'])
+        self.state = playerData['currentState']
+        self.ChangeState(self.state)
+        self.isShooting = False
+        self.gun = Gun.Gun('PLAYER')
+        self.targetX, self.targetY = self.x + 1, self.y
+        self.isDelete = False
+        self.is_boss_stage = False
+        self.boss_stage_dir = 0
+        self.direction = 1
+
     def GetCollisionBox(self):
         anim = self.anim
         x, y = self.x - anim.w / 2, self.y - anim.h / 2
@@ -77,19 +102,23 @@ class Player(Character):
         self.vx = 0
 
     def MoveUpdate(self, frame_time):
-        self.vx = self.RUN_SPEED
+        self.vx = self.RUN_SPEED * self.direction
 
     def MeleeUpdate(self, frame_time):
         self.vx = 0
         if self.frame > self.anim.frame:
-            self.ChangeState('MOVE')
+            if self.is_boss_stage:
+                self.ChangeState('IDLE')
+            else:
+                self.ChangeState('MOVE')
             self.hit_object.clear()
 
     def DeathUpdate(self, frame_time):
         self.vx = 0
         self.isShieldOn = False
         self.isShooting = False
-        if self.frame > self.anim.frame:
+        if self.frame >= self.anim.frame:
+            self.frame = self.anim.frame - 1
             self.isDelete = True
 
     def Draw(self, frame_time):
@@ -115,7 +144,7 @@ class Player(Character):
     def Update(self, frame_time):
         # 애니메이션 프레임 처리
         anim = self.anim
-        if self.frame <= anim.frame:
+        if self.frame < anim.frame:
             self.frame += anim.frame * (1 / anim.time) * frame_time
         elif anim.repeat:
             self.frame -= anim.frame
@@ -175,10 +204,12 @@ class Player(Character):
                 self.ChangeState('DEATH')
 
     def HandleEvent(self, event, frame_time):
+        if self.state == 'DEATH':
+            return
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_SPACE and self.vy == 0:
                 self.vy = 7
-            elif event.key == SDLK_a and self.state != 'MELEE':
+            elif event.key == SDLK_q and self.state != 'MELEE':
                 self.ChangeState('MELEE')
             elif event.key == SDLK_LSHIFT and self.shield >= 1:
                 self.isShieldOn = True
@@ -186,12 +217,39 @@ class Player(Character):
                 self.gun.Reload()
             elif event.key == SDLK_e:
                 self.is_get_item = True
+            if self.is_boss_stage:
+                if event.key == SDLK_a:
+                    self.boss_stage_dir -= 1
+                elif event.key == SDLK_d:
+                    self.boss_stage_dir += 1
+                if self.boss_stage_dir > 0:
+                    self.direction = 1
+                    self.ChangeState('MOVE')
+                elif self.boss_stage_dir < 0:
+                    self.direction = -1
+                    self.ChangeState('MOVE')
+                else:
+                    self.ChangeState('IDLE')
 
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_LSHIFT:
                 self.isShieldOn = False
             elif event.key == SDLK_e:
                 self.is_get_item = False
+
+            if self.is_boss_stage:
+                if event.key == SDLK_a:
+                    self.boss_stage_dir += 1
+                elif event.key == SDLK_d:
+                    self.boss_stage_dir -= 1
+                if self.boss_stage_dir > 0:
+                    self.direction = 1
+                    self.ChangeState('MOVE')
+                elif self.boss_stage_dir < 0:
+                    self.direction = -1
+                    self.ChangeState('MOVE')
+                else:
+                    self.ChangeState('IDLE')
 
         elif event.type == SDL_MOUSEMOTION:
             self.targetX, self.targetY = event.x, Camera.h - event.y - 1

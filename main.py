@@ -1,5 +1,5 @@
 import game_framework
-import Stage2 as StartStage
+import TitleState as StartStage
 import Player
 import Object
 import Gun

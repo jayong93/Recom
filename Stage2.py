@@ -1,9 +1,11 @@
 import game_framework
 import Map
 import Player
-import Gun
 import Cursor
 import Monster
+import Gun
+import GameOver
+import BossStage
 import Item
 import random
 from Object import *
@@ -11,17 +13,16 @@ from pico2d import *
 
 objList = None
 map = None
-nextStage = None
 bgm = None
 player = None
 PLAYER, MONSTER, OBJECT, TELEPORT = 0, 1, 2, 3
 
 
 def enter():
-    global objList, map, nextStage, player, bgm
+    global objList, map, player, bgm
 
     player = Player.player
-    player.gun.change_gun(Gun.pistolData)   # 나중에 제거
+    player.gun.change_gun(Gun.pistolData)
 
     objList = {PLAYER: [player], MONSTER: [], OBJECT: [], TELEPORT: []}
 
@@ -78,11 +79,16 @@ def enter():
 
 
 def exit():
-    global objList, map
+    global objList, map, bgm, player
     for t in objList:
         for o in objList[t]:
             del o
-    del objList, map
+    del objList, map, bgm
+    objList = None
+    map = None
+    bgm = None
+    player = None
+    Camera.currentMap = None
 
 
 def pause():
@@ -114,7 +120,7 @@ def update(frame_time):
     for k in objList:
         for o in objList[k]:
             o.Update(frame_time)
-            if o.y < -20:
+            if k == PLAYER and o.state != 'DEATH' and o.y < -20:
                 o.ChangeState('DEATH')
 
     for cb in map.colBox:
@@ -175,7 +181,8 @@ def update(frame_time):
         for o in objList[t]:
             if o.isDelete:
                 if t == PLAYER:
-                    game_framework.quit()
+                    game_framework.change_state(GameOver)
+                    return
                 else:
                     objList[t].remove(o)
 
@@ -184,8 +191,8 @@ def update(frame_time):
     for tp in objList[TELEPORT]:
         tcb = tp.GetCollisionBox()
         if tcb.CollisionCheck(pcb):
-            if nextStage is None:
-                game_framework.quit()
+            game_framework.change_state(BossStage)
+            return
 
 
 def draw(frame_time):
