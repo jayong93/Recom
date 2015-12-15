@@ -21,6 +21,7 @@ def enter():
     global objList, map, player, bgm
 
     player = Player.player
+    player.ChangeState('IDLE')
     player.is_boss_stage = True
 
     objList = {PLAYER: [player], MONSTER: [], OBJECT: [], TELEPORT: []}

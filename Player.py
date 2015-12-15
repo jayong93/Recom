@@ -138,8 +138,8 @@ class Player(Character):
             shield_anim = self.animationList['shield']
             shield_anim.image.clip_draw(int(self.frame) % shield_anim.frame * shield_anim.w,
                                          0, shield_anim.w, shield_anim.h, x, y)
-        x, y = x - anim.w / 2, y - anim.h / 2
-        draw_rectangle(self.colBox.left + x, self.colBox.bottom + y, self.colBox.right + x, self.colBox.top + y)
+        # x, y = x - anim.w / 2, y - anim.h / 2
+        # draw_rectangle(self.colBox.left + x, self.colBox.bottom + y, self.colBox.right + x, self.colBox.top + y)
 
     def Update(self, frame_time):
         # 애니메이션 프레임 처리

@@ -126,12 +126,12 @@ class Monster(Character):
         else:
             self.gun.image.draw(gunX, gunY)
 
-        if self.direction == self.RIGHT:
-            x, y = x - anim.w / 2, y - anim.h / 2
-        else:
-            cb = self.colBox
-            x, y = x - anim.w / 2 + (anim.w - cb.right - cb.left), y - anim.h / 2
-        draw_rectangle(self.colBox.left + x, self.colBox.bottom + y, self.colBox.right + x, self.colBox.top + y)
+        # if self.direction == self.RIGHT:
+        #     x, y = x - anim.w / 2, y - anim.h / 2
+        # else:
+        #     cb = self.colBox
+        #     x, y = x - anim.w / 2 + (anim.w - cb.right - cb.left), y - anim.h / 2
+        # draw_rectangle(self.colBox.left + x, self.colBox.bottom + y, self.colBox.right + x, self.colBox.top + y)
 
     def Update(self, frame_time):
         # 애니메이션 프레임 처리
